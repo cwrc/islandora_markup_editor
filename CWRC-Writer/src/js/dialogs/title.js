@@ -18,10 +18,6 @@ return function(writer) {
 			'<p>Tag as:</p>'+
 			'<span class="tagAs"></span>'+
 		'</div>'+
-		'<div id="'+id+'_describeAs">'+
-			'<p>Description:</p>'+
-			'<span class="tagAs"></span>'+
-		'</div>'+
 		'<div id="'+id+'_level">'+
 			'<p>Type:</p>'+
 			'<input type="radio" value="a" name="level" id="'+id+'_level_a"/>'+
@@ -80,13 +76,7 @@ return function(writer) {
 	var titleResult = function() {
 		currentData.level = $('#'+id+'_level input[name="level"]:checked').val();
 		currentData.certainty = $('#'+id+'_certainty input:checked').val();
-		// Fix to include custom 'Tag As:' value.
-		var tag_as_val = $('#'+id+'_tagAs input').attr('value');
-		var description_val = $('#'+id+'_describeAs input').attr('value');
-		if (currentData != null) {
-			currentData.cwrcInfo.name = tag_as_val;
-			currentData.cwrcInfo.description = description_val;
-		}
+		
 		if (mode == EDIT && currentData != null) {
 			w.tagger.editEntity(currentId, currentData);
 		} else {
@@ -109,9 +99,7 @@ return function(writer) {
 			currentData = {};
 			
 			if (config.cwrcInfo != null) {
-				$('#'+id+'_tagAs span').html('<input type="text" value="' + config.cwrcInfo.name +'"></input>');
-				$('#'+id+'_describeAs span').html('<input type="textarea" style="resize:none;" value="' + "" +'"></input>');
-				//$('#'+id+'_tagAs span').html(config.cwrcInfo.name);
+				$('#'+id+'_tagAs span').html(config.cwrcInfo.name);
 				currentData.cwrcInfo = config.cwrcInfo;
 			}
 			

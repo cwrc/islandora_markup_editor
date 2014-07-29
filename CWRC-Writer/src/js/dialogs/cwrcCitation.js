@@ -16,8 +16,7 @@ return function(writer) {
 					});
 				} else {
 					result = {
-						id: result.response.pid,
-						data: result.data
+						id: 'http://cwrc-dev-01.srv.ualberta.ca/islandora/object/'+result.response.pid
 					};
 					w.dialogManager.show('tagCitation', {
 						cwrcInfo: result
@@ -43,14 +42,24 @@ return function(writer) {
 					success: function(result) {
 						if (result.id == null) {
 							result = {
-								id: 'cwrc:3b92364f-0e16-4599-bd8c-92c95a409a00',
+								id: w.utilities.createGuid(),
 								name: ['Test Citation'],
 								repository: 'cwrc'
 							};
 						}
+						
+						if (result.repository === 'viaf') {
+							result.id = 'http://viaf.org/viaf/'+result.id;
+						} else {
+							result.id = 'http://cwrc-dev-01.srv.ualberta.ca/islandora/object/'+result.id;
+						}
+						
 						if ($.isArray(result.name)) {
 							result.name = result.name[0];
 						}
+						
+						delete result.data;
+						
 						w.dialogManager.show('tagCitation', {
 							query: query,
 							cwrcInfo: result

@@ -32,10 +32,6 @@ return function(writer) {
 			'<input type="radio" name="dateType" value="date" id="'+id+'_type_date" checked="checked"/><label for="'+id+'_type_date">Single Date</label>'+
 			'<input type="radio" name="dateType" value="range" id="'+id+'_type_range"/><label for="'+id+'_type_range">Date Range</label>'+
 		'</div>'+
-		'<div id="'+id+'_describeAs">'+
-			'<p>Description:</p>'+
-			'<span class="tagAs"></span>'+
-		'</div>'+
 		'<div id="date">'+
 			'<label for="cwrc_datePicker">Date:</label><br/><input type="text" id="cwrc_datePicker" />'+
 		'</div>'+
@@ -223,11 +219,6 @@ return function(writer) {
 		} else {
 			data = null;
 		}
-		var description_val = $('#'+id+'_describeAs input').attr('value');
-		if (data != null) {
-			console.log(data);
-			data.description = description_val;
-		}
 		if (mode == EDIT && data != null) {
 			w.tagger.editEntity(w.editor.currentEntity, data);
 		} else {
@@ -253,7 +244,7 @@ return function(writer) {
 			$('#'+id+'_type input:checked').prop('checked', false).button('refresh');
 			$('#'+id+'_certainty input:checked').prop('checked', false).button('refresh');
 			$('#'+id+'_teiParent').parent().accordion('option', 'active', false);
-			$('#'+id+'_describeAs span').html('<input type="textarea" style="resize:none;" value="' + "" +'"></input>');
+			
 			if (mode == ADD) {
 				var dateValue = '';
 				

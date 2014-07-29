@@ -121,7 +121,7 @@ return function(writer) {
 		var sel = w.editor.selection;
 		
 		// disallow empty entities
-		if (sel.isCollapsed()) return w.NO_SELECTION;
+		if (!isStructTag && sel.isCollapsed()) return w.NO_SELECTION;
 		
 		var range = sel.getRng(true);
 		// next line commented out as it messes up the selection in IE
@@ -258,7 +258,7 @@ return function(writer) {
 		}
 		
 		// extra check to make sure we're not overlapping with an entity
-		if (isStructTag || w.mode == w.XML) {
+		if (isStructTag || w.allowOverlap === false) {
 			var c;
 			var currentNode = range.startContainer;
 			var ents = {};
@@ -807,6 +807,13 @@ return function(writer) {
 	    }
 
 	    return paths.length ? "/" + paths.join("/") : null;
+	};
+	
+	u.createGuid = function() {
+	    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+	        var r = Math.random()*16|0, v = c === 'x' ? r : (r&0x3|0x8);
+	        return v.toString(16);
+	    });
 	};
 	
 	return u;

@@ -1,13 +1,14 @@
 define([
     'jquery',
     'jquery-ui',
-    'dialogs/addEvent','dialogs/addOrg','dialogs/addPerson','dialogs/addPlace','dialogs/addSchema',
+    'dialogs/addEvent','dialogs/addSchema',
     'dialogs/citation','dialogs/correction','dialogs/date','dialogs/fileManager',
     'dialogs/header','dialogs/keyword','dialogs/link','dialogs/message',
     'dialogs/note','dialogs/org','dialogs/person','dialogs/place','dialogs/search','dialogs/title','dialogs/triple',
     'dialogs/cwrcPerson','dialogs/cwrcOrg','dialogs/cwrcPlace','dialogs/cwrcTitle','dialogs/cwrcCitation'
 ], function($, jqueryui,
-		AddEvent, AddOrg, AddPerson, AddPlace, AddSchema, Citation, Correction, DateDialog, FileManager,
+		AddEvent, AddSchema,
+		Citation, Correction, DateDialog, FileManager,
 		Header, Keyword, Link, Message, Note, Org, Person, Place, Search, Title, Triple,
 		CwrcPerson, CwrcOrg, CwrcPlace, CwrcTitle, CwrcCitation
 ) {
@@ -45,10 +46,7 @@ return function(writer) {
 		keyword: new Keyword(writer),
 		date: new DateDialog(writer),
 		link: new Link(writer),
-//		addperson: new AddPerson(writer),
-		addplace: new AddPlace(writer),
 		addevent: new AddEvent(writer),
-//		addorg: new AddOrg(writer),
 		triple: new Triple(writer),
 		header: new Header(writer),
 		filemanager: new FileManager(writer),
@@ -68,7 +66,7 @@ return function(writer) {
 	// log in for CWRC-Dialogs
 	cD.initializeWithLogin('mark_test', 'P4ssw0rd!');
 	
-	dialogs.event = dialogs.search;
+	dialogs.event = dialogs.addevent;
 	
 	var pm = {
 		/**

@@ -5,8 +5,7 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
 		<title>CWRC-Writer</title>
 		
-		<script type="text/javascript" src="js/config.js"></script>
-		<script type="text/javascript" src="js/lib/require/require.js"></script>
+		<script type="text/javascript" data-main="js/config.js" src="js/lib/require/require.js"></script>
 		<script type="text/javascript" src="js/layout.js"></script>
 
 		<link type="text/css" rel="stylesheet" href="css/style.css" />
@@ -30,8 +29,8 @@
 					writer = new Writer(config);
 					writer.event('writerInitialized').subscribe(function(writer) {
 						// load modules then do the setup
-						require(['modules/entitiesList', 'modules/relations',
-						         'modules/selection', 'modules/structureTree', 'modules/validation'
+						require(['modules/entitiesList','modules/relations','modules/selection',
+						         'modules/structureTree','modules/validation'
 						], function(EntitiesList, Relations, Selection, StructureTree, Validation) {
 							setupLayoutAndModules(writer, EntitiesList, Relations, Selection, StructureTree, Validation);
 							writer.fileManager.loadInitialDocument(window.location.hash);
@@ -44,26 +43,28 @@
 					id: 'editor',
 					delegator: Delegator,
 					cwrcRootUrl: baseUrl+'/editor/dev/',
+					//mode: 'xml',
+					//allowOverlap: false,
 					schemas: {
 						tei: {
 							name: 'CWRC Basic TEI Schema',
-							url: baseUrl+'/schema/CWRC-TEIBasic.rng',
-							cssUrl: baseUrl+'/editor/test/css/tei_converted.css'
+							url: 'http://cwrc.ca/schemas/cwrc_tei_lite.rng',
+							cssUrl: baseUrl+'/editor/dev/css/tei_converted.css'
 						},
 						events: {
 							name: 'Events Schema',
-							url: baseUrl+'/schema/events.rng',
-							cssUrl: baseUrl+'/editor/test/css/orlando_converted.css'
+							url: 'http://cwrc.ca/schemas/orlando_events.rng',
+							cssUrl: baseUrl+'/editor/dev/css/orlando_converted.css'
 						},
 						biography: {
 							name: 'Biography Schema',
-							url: baseUrl+'/schema/biography.rng',
-							cssUrl: baseUrl+'/editor/test/css/orlando_converted.css'
+							url: 'http://cwrc.ca/schemas/orlando_biography.rng',
+							cssUrl: baseUrl+'/editor/dev/css/orlando_converted.css'
 						},
 						writing: {
 							name: 'Writing Schema',
-							url: baseUrl+'/schema/writing.rng',
-							cssUrl: baseUrl+'/editor/test/css/orlando_converted.css'
+							url: 'http://cwrc.ca/schemas/orlando_writing.rng',
+							cssUrl: baseUrl+'/editor/dev/css/orlando_converted.css'
 						}
 					}
 				};
@@ -81,22 +82,22 @@
 						config.schemas = {
 							tei: {
 								name: 'CWRC Basic TEI Schema',
-								url: baseUrl+'/cwrc/src/schema/CWRC-TEIBasic.rng',
+								url: 'http://cwrc.ca/schemas/cwrc_tei_lite.rng',
 								cssUrl: baseUrl+'/cwrc/src/css/tei_converted.css'
 							},
 							events: {
 								name: 'Events Schema',
-								url: baseUrl+'/cwrc/src/schema/events.rng',
+								url: 'http://cwrc.ca/schemas/orlando_events.rng',
 								cssUrl: baseUrl+'/cwrc/src/css/orlando_converted.css'
 							},
 							biography: {
 								name: 'Biography Schema',
-								url: baseUrl+'/cwrc/src/schema/biography.rng',
+								url: 'http://cwrc.ca/schemas/orlando_biography.rng',
 								cssUrl: baseUrl+'/cwrc/src/css/orlando_converted.css'
 							},
 							writing: {
 								name: 'Writing Schema',
-								url: baseUrl+'/cwrc/src/schema/writing.rng',
+								url: 'http://cwrc.ca/schemas/orlando_writing.rng',
 								cssUrl: baseUrl+'/cwrc/src/css/orlando_converted.css'
 							}
 						};

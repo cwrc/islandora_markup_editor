@@ -18,8 +18,7 @@ return function(writer) {
 					});
 				} else {
 					result = {
-						id: result.response.pid,
-						data: result.data
+						id: 'http://cwrc-dev-01.srv.ualberta.ca/islandora/object/'+result.response.pid
 					};
 					w.dialogManager.show('tagPlace', {
 						cwrcInfo: result
@@ -44,15 +43,30 @@ return function(writer) {
 				cD.popSearchPlace({
 					success: function(result) {
 						if (result.id == null) {
+							var id = w.utilities.createGuid();
 							result = {
-								id: 'cwrc:3b92364f-0e16-4599-bd8c-92c95a409a00',
-								name: ['Test Place'],
-								repository: 'cwrc'
+								id: id,
+								data: '<geoname><name>Hamilton</name><asciiName>Hamilton</asciiName><lat>44.0501200</lat><lng>-78.2328200</lng><countryCode>CA</countryCode><countryName>Canada</countryName><fcl>A</fcl><fcode>ADM2</fcode><geonameid>'+w.utilities.createGuid()+'</geonameid><granularity>Province/State</granularity></geoname>',
+								name: 'Test Place',
+								repository: 'geonames'
 							};
 						}
+						
+						var xmlData = w.utilities.stringToXML(result.data);
+						
+						if (result.repository === 'geonames') {
+							var id = $('geonameid', xmlData).text();
+							result.id = 'http://www.geonames.org/'+id;
+						} else {
+							result.id = 'http://cwrc-dev-01.srv.ualberta.ca/islandora/object/'+result.id;
+						}
+						
 						if ($.isArray(result.name)) {
 							result.name = result.name[0];
 						}
+						
+						delete result.data;
+						
 						w.dialogManager.show('tagPlace', {
 							cwrcInfo: result
 						});
