@@ -12,6 +12,8 @@ return function(config) {
 	
 	var w = {};
 	
+	w.initialConfig = config;
+	
 	w.layout = null; // jquery ui layout object
 	w.editor = null; // reference to the tinyMCE instance we're creating, set in setup
 	
@@ -78,49 +80,57 @@ return function(config) {
 	// possible results when trying to add entity
 	w.NO_SELECTION = 0;
 	w.NO_COMMON_PARENT = 1;
-	w.VALID = 2;
+	w.OVERLAP = 2;
+	w.VALID = 3;
 	
 	w.emptyTagId = null; // stores the id of the entities tag to be added
 	
 	w.highlightEntity = function(id, bm, doScroll) {
-		var prevHighlight = $('#entityHighlight', w.editor.getBody());
-		if (prevHighlight.length == 1) {
-			var parent = prevHighlight.parent()[0];
-			prevHighlight.contents().unwrap();
-			parent.normalize();
-			
-			w.event('entityUnfocused').publish(w.editor.currentEntity);
-		}
-		
-		w.editor.currentEntity = null;
-		
-		if (id) {
-			w.editor.currentEntity = id;
-			var type = w.entities[id].props.type;
-			var markers = w.editor.dom.select('span[name="'+id+'"]');
-			var start = markers[0];
-			var end = markers[1];
-			
-			var nodes = [start];
-			var currentNode = start;
-			while (currentNode != end  && currentNode != null) {
-				currentNode = currentNode.nextSibling;
-				nodes.push(currentNode);
+		if (id == null || id !== w.editor.currentEntity) {
+			var prevHighlight = $('#entityHighlight', w.editor.getBody());
+			if (prevHighlight.length === 1) {
+				var parent = prevHighlight.parent()[0];
+				prevHighlight.contents().unwrap();
+				parent.normalize();
+			}
+			if (w.editor.currentEntity != null) {
+				w.event('entityUnfocused').publish(w.editor.currentEntity);
 			}
 			
-			$(nodes).wrapAll('<span id="entityHighlight" class="'+type+'"/>');
+			w.editor.currentEntity = null;
 			
-			// maintain the original caret position
-			if (bm) {
-				w.editor.selection.moveToBookmark(bm);
+			if (id) {
+				w.editor.currentEntity = id;
+				var type = w.entities[id].props.type;
+				
+				
+				var markers = w.editor.dom.select('span[name="'+id+'"]');
+				var start = markers[0];
+				var end = markers[1];
+				
+				if (type !== 'note' && type !== 'citation' && type !== 'keyword') {
+					var nodes = [start];
+					var currentNode = start;
+					while (currentNode != end  && currentNode != null) {
+						currentNode = currentNode.nextSibling;
+						nodes.push(currentNode);
+					}
+					
+					$(nodes).wrapAll('<span id="entityHighlight" class="'+type+'"/>');
+				}
+				
+				// maintain the original caret position
+				if (bm) {
+					w.editor.selection.moveToBookmark(bm);
+				}
+				
+				if (doScroll) {
+					var val = $(start).offset().top;
+					$(w.editor.dom.doc.body).scrollTop(val);
+				}
+				
+				w.event('entityFocused').publish(id);
 			}
-			
-			if (doScroll) {
-				var val = $(start).offset().top;
-				$(w.editor.dom.doc.body).scrollTop(val);
-			}
-			
-			w.event('entityFocused').publish(id);
 		}
 	};
 	
@@ -131,11 +141,11 @@ return function(config) {
 	 */
 	w.selectStructureTag = function(id, selectContentsOnly) {
 		selectContentsOnly = selectContentsOnly == null ? false : selectContentsOnly;
-		w.editor.currentStruct = id;
+		
 		var node = $('#'+id, w.editor.getBody());
 		var nodeEl = node[0];
-		
 		if (nodeEl != null) {
+			w.editor.currentStruct = id;
 			var rng = w.editor.dom.createRng();
 			if (selectContentsOnly) {
 				if (tinymce.isWebKit) {
@@ -250,8 +260,14 @@ return function(config) {
 		
 		// update current entity
 		if (ed.currentEntity) {
-			var content = $('#entityHighlight', ed.getBody()).text();
+			var content = '';
 			var entity = w.entities[ed.currentEntity];
+			if (entity.props.type === 'note' || entity.props.type === 'citation') {
+				// shouldn't actually be here since you can't get "inside" these entities
+				content = $($.parseXML(entity.info.content)).text();
+			} else {
+				content = $('#entityHighlight', ed.getBody()).text();
+			}
 			entity.props.content = content;
 			entity.props.title = w.utilities.getTitleFromContent(content);
 			w.event('entityEdited').publish(ed.currentEntity);
