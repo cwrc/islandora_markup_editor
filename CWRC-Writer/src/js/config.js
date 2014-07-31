@@ -23,6 +23,8 @@ var require = {
 		
 		'attributeWidget': 'dialogs/attributeWidget',
 		'searchWidget': 'dialogs/searchWidget',
+
+         'octokit': 'lib/octokit/octokit',
 		
 		// cwrcDialogs
 		'knockout': 'lib/knockout/knockout-2.3.0',
