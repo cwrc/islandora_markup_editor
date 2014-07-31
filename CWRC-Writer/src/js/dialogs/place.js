@@ -29,13 +29,7 @@ return function(writer) {
 	var onSaveClick = function() {
 		processData();
 		dialog.dialog('close');
-		// Fix to include custom 'Tag As:' value.
-		var tag_as_val = $('#'+id+'_tagAs input').attr('value');
-		var description_val = $('#'+id+'_describeAs input').attr('value');
-		if (currentData != null) {
-			currentData.cwrcInfo.name = tag_as_val;
-			currentData.cwrcInfo.description = description_val;
-		}
+		
 		if (mode == EDIT && currentData != null) {
 			w.tagger.editEntity(currentId, currentData);
 		} else {
@@ -49,10 +43,6 @@ return function(writer) {
 	'<div id="'+id+'Dialog" class="annotationDialog">'+
 		'<div id="'+id+'_tagAs">'+
 			'<p>Tag as:</p>'+
-			'<span class="tagAs"></span>'+
-		'</div>'+
-		'<div id="'+id+'_describeAs">'+
-			'<p>Description:</p>'+
 			'<span class="tagAs"></span>'+
 		'</div>'+
 		'<div id="'+id+'_certainty">'+
@@ -116,10 +106,9 @@ return function(writer) {
 			// TODO how to handle ADD/EDIT with cwrcInfo
 			
 			currentData = {};
+			
 			if (config.cwrcInfo != null) {
-				$('#'+id+'_tagAs span').html('<input type="text" value="' + config.cwrcInfo.name +'"></input>');
-				$('#'+id+'_describeAs span').html('<input type="textarea" style="resize:none;" value="' + "" +'"></input>');
-				//$('#'+id+'_tagAs span').html(config.cwrcInfo.name);
+				$('#'+id+'_tagAs span').html(config.cwrcInfo.name);
 				currentData.cwrcInfo = config.cwrcInfo;
 			}
 			

@@ -3,11 +3,14 @@ define(['jquery', 'jquery-ui', 'tinymce'], function($, jqueryUi, tinymce) {
 return function(writer) {
 	var w = writer;
 	
+	var iframe = null;
 	var cwrcWriter = null;
 	
 	var mode = null;
 	var ADD = 0;
 	var EDIT = 1;
+	
+	var currentData = null;
 	
 	$(document.body).append(''+
 	'<div id="noteDialog">'+
@@ -39,44 +42,52 @@ return function(writer) {
 				noteResult();
 			},
 			'Cancel': function() {
-				noteResult(true);
+				try {
+					cwrcWriter.editor.remove();
+					cwrcWriter.editor.destroy();
+				} catch (e) {
+					// editor wasn't fully initialized
+				}
+				currentData = null;
+				note.dialog('close');
 			}
 		}
 	});
 	$('#note_type').buttonset();
 	
-	function noteResult(cancelled) {
-		var data = null;
-		if (!cancelled) {
-			var content = cwrcWriter.converter.getDocumentContent();
-			var data = {
-				type: $('#note_type input:checked').val(),
-				content: content
-			};
-		}
+	function noteResult() {
+		tinymce.DOM.counter = iframe.contentWindow.tinymce.DOM.counter + 1;
 		
-		if (mode == EDIT && data != null) {
-			w.tagger.editEntity(w.editor.currentEntity, data);
+		currentData.type = $('#note_type input:checked').val();
+		var content = cwrcWriter.converter.getDocumentContent();
+		currentData.content = content;
+	
+		if (mode == EDIT) {
+			w.tagger.editEntity(w.editor.currentEntity, currentData);
 		} else {
-			w.tagger.finalizeEntity('note', data);
+			w.tagger.finalizeEntity('note', currentData);
 		}
 		
 		cwrcWriter.editor.remove();
 		cwrcWriter.editor.destroy();
+		currentData = null;
 		note.dialog('close');
 	};
 	
 	return {
 		show: function(config) {
-			var iframe = note.find('iframe')[0];
+			iframe = note.find('iframe')[0];
 			if (iframe.src == '') {
 				iframe.src = 'note.htm';
 			}
+			
+			currentData = {};
 			
 			mode = config.entry ? EDIT : ADD;
 			var prefix = 'Add ';
 			if (mode == EDIT) {
 				prefix = 'Edit ';
+				currentData = config.entry.info;
 			}
 			
 			var title = prefix+'Note';
@@ -92,7 +103,6 @@ return function(writer) {
 			
 			// hack to get the writer
 			function getCwrcWriter() {
-				var iframe = note.find('iframe')[0];
 				cwrcWriter = iframe.contentWindow.writer;
 				if (cwrcWriter == null) {
 					setTimeout(getCwrcWriter, 50);
@@ -103,7 +113,13 @@ return function(writer) {
 			
 			function postSetup() {
 				if (w.schemaManager.schemaId == 'tei') {
+					iframe.contentWindow.tinymce.DOM.counter = tinymce.DOM.counter + 1;
+					
 					cwrcWriter.event('documentLoaded').subscribe(function() {
+						// TODO remove forced XML/no overlap
+						cwrcWriter.mode = cwrcWriter.XML;
+						cwrcWriter.allowOverlap = false;
+						
 						cwrcWriter.editor.focus();
 					});
 					
@@ -123,6 +139,13 @@ return function(writer) {
 						var data = config.entry.info;
 						$('#note_type input[value="'+data.type+'"]').prop('checked', true).button('refresh');
 						var xmlDoc = cwrcWriter.utilities.stringToXML(data.content);
+						if (xmlDoc.firstChild.nodeName === 'note') {
+							// remove the annotationId attribute
+							xmlDoc.firstChild.removeAttribute('annotationId');
+							// insert the appropriate wrapper tags
+							var xml = $.parseXML('<TEI><text><body/></text></TEI>');
+							xmlDoc = $(xml).find('body').append(xmlDoc.firstChild).end()[0];
+						}
 						cwrcWriter.fileManager.loadDocumentFromXml(xmlDoc);
 					}
 				} else {

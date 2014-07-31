@@ -13,10 +13,6 @@ return function(config) {
 	var datasource = config.datasource;
 	
 	parent.append(''+
-	'<div id="'+parentId+'_describeAs">'+
-		'<p>Description:</p>'+
-		'<span class="tagAs">' + '<input type="textarea" style="resize:none;" value="' + "" +'"></input>' +'</span>'+
-	'</div>'+
 	'<div id="'+parentId+'_searchBox" style="height: 31px;">'+
 	    '<label for="'+parentId+'_search_query">Search</label>'+
 	    '<input type="text" name="query" id="'+parentId+'_search_query" />'+

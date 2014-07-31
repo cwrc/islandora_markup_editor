@@ -118,7 +118,7 @@ function islandora_markup_editor_add_files_from_dir($direc, $file_type = 'js') {
   }
   $dir = new DirectoryIterator($direc);
   foreach ($dir as $fileinfo) {
-    if (!$fileinfo->isDot() && $fileinfo->isFile() && ($fileinfo->getExtension() == $file_type)) {
+    if (!$fileinfo->isDot() && $fileinfo->isFile()) {
       $file_name = $fileinfo->getFilename();
       $function($direc . "/$file_name");
     }

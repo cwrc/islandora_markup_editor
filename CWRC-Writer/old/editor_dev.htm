@@ -1,0 +1,150 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+		<title>CWRC-Writer</title>
+		
+		<script type="text/javascript" src="js/config.js"></script>
+		<script type="text/javascript" src="js/lib/require/require.js"></script>
+		<script type="text/javascript" src="js/layout.js"></script>
+
+		<link type="text/css" rel="stylesheet" href="css/style.css" />
+		<link type="text/css" rel="stylesheet" href="css/islandora_style.css" />
+		
+		<link type="text/css" rel="stylesheet" href="smoothness/jquery-ui-1.10.4.custom.css" />
+		<link type="text/css" rel="stylesheet" href="css/layout-default-latest.css" />
+		<link type="text/css" rel="stylesheet" href="js/lib/snippet/jquery.snippet.css" />
+		
+		<link type="text/css" rel="stylesheet" href="js/lib/bootstrap/bootstrap.css" />
+		<link type="text/css" rel="stylesheet" href="js/cwrcDialogs/css/datepicker.css" />
+		<link type="text/css" rel="stylesheet" href="js/cwrcDialogs/css/cD.css" />
+
+		<script type="text/javascript">
+			function cwrcWriterInit(Writer, Delegator) {
+				cwrc_params = {};
+				
+				writer = null;
+				
+				function doInit() {
+					writer = new Writer(config);
+					writer.event('writerInitialized').subscribe(function(writer) {
+						// load modules then do the setup
+						require(['modules/entitiesList', 'modules/relations',
+						         'modules/selection', 'modules/structureTree', 'modules/validation'
+						], function(EntitiesList, Relations, Selection, StructureTree, Validation) {
+							setupLayoutAndModules(writer, EntitiesList, Relations, Selection, StructureTree, Validation);
+							writer.fileManager.loadInitialDocument(window.location.hash);
+						});
+					});
+				}
+				
+				var baseUrl = window.location.protocol+'//'+window.location.host;
+				var config = {
+					id: 'editor',
+					delegator: Delegator,
+					cwrcRootUrl: baseUrl+'/editor/dev/',
+					schemas: {
+						tei: {
+							name: 'CWRC Basic TEI Schema',
+							url: baseUrl+'/schema/CWRC-TEIBasic.rng',
+							cssUrl: baseUrl+'/editor/test/css/tei_converted.css'
+						},
+						events: {
+							name: 'Events Schema',
+							url: baseUrl+'/schema/events.rng',
+							cssUrl: baseUrl+'/editor/test/css/orlando_converted.css'
+						},
+						biography: {
+							name: 'Biography Schema',
+							url: baseUrl+'/schema/biography.rng',
+							cssUrl: baseUrl+'/editor/test/css/orlando_converted.css'
+						},
+						writing: {
+							name: 'Writing Schema',
+							url: baseUrl+'/schema/writing.rng',
+							cssUrl: baseUrl+'/editor/test/css/orlando_converted.css'
+						}
+					}
+				};
+				
+				$.ajax({
+					url: 'http://apps.testing.cwrc.ca/editor/documents/info/projectname',
+					timeout: 3000,
+					success: function(data, status, xhr) {
+						config.project = data;
+						
+						doInit();
+					},
+					error: function() {
+						config.cwrcRootUrl = baseUrl+'/cwrc/src/';
+						config.schemas = {
+							tei: {
+								name: 'CWRC Basic TEI Schema',
+								url: baseUrl+'/cwrc/src/schema/CWRC-TEIBasic.rng',
+								cssUrl: baseUrl+'/cwrc/src/css/tei_converted.css'
+							},
+							events: {
+								name: 'Events Schema',
+								url: baseUrl+'/cwrc/src/schema/events.rng',
+								cssUrl: baseUrl+'/cwrc/src/css/orlando_converted.css'
+							},
+							biography: {
+								name: 'Biography Schema',
+								url: baseUrl+'/cwrc/src/schema/biography.rng',
+								cssUrl: baseUrl+'/cwrc/src/css/orlando_converted.css'
+							},
+							writing: {
+								name: 'Writing Schema',
+								url: baseUrl+'/cwrc/src/schema/writing.rng',
+								cssUrl: baseUrl+'/cwrc/src/css/orlando_converted.css'
+							}
+						};
+						
+						doInit();
+					}
+				});
+			};
+		</script>
+	</head>
+<body>
+<div id="cwrc_wrapper">
+	<div id="cwrc_header" class="cwrc ui-layout-north">
+		<h1>CWRC-Writer v0.8</h1>
+		<div id="headerButtons">
+		</div>
+	</div>
+	<div class="cwrc ui-layout-west">
+		<div id="westTabs" class="tabs">
+			<ul>
+				<li><a href="#entities">Entities</a></li>
+				<li><a href="#structure">Markup</a></li>
+				<li><a href="#relations">Relations</a></li>
+				<!-- li id="annotation_tab"><a href="#image-annotations">Image Annotations</a></li -->
+			</ul>
+			<div id="westTabsContent" class="ui-layout-content">
+				<!-- div id="image-annotations">
+					<div id="comment_annos_block"></div>
+				</div -->
+			</div>
+		</div>
+	</div>
+	<div id="cwrc_main" class="ui-layout-center">
+		<div class="ui-layout-center">
+			<form method="post" action="">
+				<textarea id="editor" name="editor" class="tinymce"></textarea>
+			</form>
+		</div>
+		<div class="cwrc ui-layout-south">
+			<div id="southTabs" class="tabs">
+				<ul>
+					<li><a href="#validation">Validation</a></li>
+					<li><a href="#selection">Selection</a></li>
+				</ul>
+				<div id="southTabsContent" class="ui-layout-content"></div>
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+</html>

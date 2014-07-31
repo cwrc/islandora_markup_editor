@@ -3,10 +3,9 @@
 	<head>
 		<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-		<title>CWRCWriter</title>
+		<title>CWRC-Writer</title>
 		
-		<script type="text/javascript" src="js/config.js"></script>
-		<script type="text/javascript" src="js/lib/require/require.js"></script>
+		<script type="text/javascript" data-main="js/config.js" src="js/lib/require/require.js"></script>
 
 		<link type="text/css" rel="stylesheet" href="css/style.css" />
 		<link type="text/css" rel="stylesheet" href="css/islandora_style.css" />
@@ -91,22 +90,22 @@
 					schemas: {
 						tei: {
 							name: 'CWRC Basic TEI Schema',
-							url: baseUrl+'/schema/CWRC-TEIBasic.rng',
+							url: 'http://cwrc.ca/schemas/cwrc_tei_lite.rng',
 							cssUrl: baseUrl+'/editor/dev/css/tei_converted.css'
 						},
 						events: {
 							name: 'Events Schema',
-							url: baseUrl+'/schema/events.rng',
+							url: 'http://cwrc.ca/schemas/orlando_events.rng',
 							cssUrl: baseUrl+'/editor/dev/css/orlando_converted.css'
 						},
 						biography: {
 							name: 'Biography Schema',
-							url: baseUrl+'/schema/biography.rng',
+							url: 'http://cwrc.ca/schemas/orlando_biography.rng',
 							cssUrl: baseUrl+'/editor/dev/css/orlando_converted.css'
 						},
 						writing: {
 							name: 'Writing Schema',
-							url: baseUrl+'/schema/writing.rng',
+							url: 'http://cwrc.ca/schemas/orlando_writing.rng',
 							cssUrl: baseUrl+'/editor/dev/css/orlando_converted.css'
 						}
 					}
@@ -125,22 +124,22 @@
 						config.schemas = {
 							tei: {
 								name: 'CWRC Basic TEI Schema',
-								url: baseUrl+'/cwrc/src/schema/CWRC-TEIBasic.rng',
+								url: 'http://cwrc.ca/schemas/cwrc_tei_lite.rng',
 								cssUrl: baseUrl+'/cwrc/src/css/tei_converted.css'
 							},
 							events: {
 								name: 'Events Schema',
-								url: baseUrl+'/cwrc/src/schema/events.rng',
+								url: 'http://cwrc.ca/schemas/orlando_events.rng',
 								cssUrl: baseUrl+'/cwrc/src/css/orlando_converted.css'
 							},
 							biography: {
 								name: 'Biography Schema',
-								url: baseUrl+'/cwrc/src/schema/biography.rng',
+								url: 'http://cwrc.ca/schemas/orlando_biography.rng',
 								cssUrl: baseUrl+'/cwrc/src/css/orlando_converted.css'
 							},
 							writing: {
 								name: 'Writing Schema',
-								url: baseUrl+'/cwrc/src/schema/writing.rng',
+								url: 'http://cwrc.ca/schemas/orlando_writing.rng',
 								cssUrl: baseUrl+'/cwrc/src/css/orlando_converted.css'
 							}
 						};

@@ -1,16 +1,18 @@
 function setupLayoutAndModules(w, EntitiesList, Relations, Selection, StructureTree, Validation) {
-
 	w.layout = $('#cwrc_wrapper').layout({
 		defaults: {
 			maskIframesOnResize: true,
 			resizable: true,
 			slidable: false
 		},
-		east: {
-			onresize: function() {
-				resizeCanvas();
-			},
-		},
+	//			east: {
+	//				onresize: function() {
+	//					// TODO: Move this out of the editor somehow.
+	//					// Accessing 'writer.layout.east.onresize does no
+	//					// work.
+	//					resizeCanvas();
+	//				},
+	//			},
 		north: {
 			size: 35,
 			minSize: 35,

@@ -1,6 +1,8 @@
 var require = {
 	baseUrl: window.location.protocol + "//" + window.location.hostname + "/sites/all/modules/islandora_markup_editor/CWRC-Writer/src/js",
 	paths: {
+        'text': 'lib/require/text', // requirejs text plugin
+
 		'jquery': 'lib/jquery/jquery-1.9.1',
 		'jquery-ui': 'lib/jquery/jquery-ui-1.10.4.custom',
 		'jquery.layout': 'lib/jquery/jquery.layout-latest.min',
@@ -8,8 +10,9 @@ var require = {
 		'jquery.contextmenu': 'lib/jquery/jquery.contextmenu',
 		'jquery.tmpl': 'lib/jquery/jquery.tmpl.min',
 		'jquery.watermark': 'lib/jquery/jquery.watermark.min',
-		'jquery.hotkeys': 'lib/jstree/jquery.hotkeys',
-		'jquery.jstree': 'lib/jstree/jquery.jstree', // can't use jquery.jtree.min.js due to modification
+		//'jquery.hotkeys': 'lib/jstree/jquery.hotkeys',
+		//'jquery.jstree': 'lib/jstree/jquery.jstree', // can't use jquery.jtree.min.js due to modification
+        'jquery.jstree': 'lib/jstree/jstree.3.0.0',
 		'jquery.snippet': 'lib/snippet/jquery.snippet.min',
 		
 		'tinymce': 'lib/tinymce/tiny_mce_src',
@@ -35,8 +38,6 @@ var require = {
 		'jquery.contextmenu': ['jquery'],
 		'jquery.tmpl': ['jquery'],
 		'jquery.watermark': ['jquery'],
-		'jquery.hotkeys': ['jquery'],
-		'jquery.jstree': ['jquery.hotkeys'],
 		'jquery.snippet': ['jquery'],
 		'tinymce': {
 			exports: 'tinymce',
