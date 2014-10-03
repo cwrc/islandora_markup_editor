@@ -5,12 +5,33 @@
  */
 
 /**
- * Menu callback for the editor to persist TEI data.
+ * Menu callback for the editor to persist OA Open Annotation data.
  *
- * @param AbstractObject $fedora_object
- *   The fedora object
+ * @param $hasTarget_uri
+ *    the URI of the target object in OA 
  */
-function islandora_markup_editor_savedata(AbstractObject $fedora_object) {
+function islandora_markup_editor_oa($hasTarget_uri) {
+
+  try {
+    drupal_json_output($cwrc);
+  }
+
+  catch (Exception $e) {
+    watchdog('islandora_markup_editor',
+      'Failed to set OBJ datastream content for pid @pid</br>code: @code<br/>message: @msg',
+      array(
+        '@pid' => $fedora_object->id,
+        '@code' => $e->getCode(),
+        '@msg' => $e->getMessage(),
+      ),
+      WATCHDOG_ERROR
+    );
+    drupal_json_output(array("Error" => "An error during the lookup"));
+  }
+}
+
+
+function islandora_markup_editor_oa_update() {
   module_load_include('inc', 'islandora_markup_editor', 'includes/utilities');
   try {
     parse_str(file_get_contents('php://input'), $put);
@@ -47,38 +68,19 @@ function islandora_markup_editor_savedata(AbstractObject $fedora_object) {
     );
     drupal_json_output(array("Error" => "An error occured updating "));
   }
+ 
 }
 
+
 /**
- * Menu callback to provide setup info for the cwrc-writer/viewer.
+ * Menu callback to mint a new URI.
  *
- * @param AbstractObject $fedora_object
- *   Fedora object to provide setup for.
+ * 
+ *   
  */
-function islandora_markup_editor_setup(AbstractObject $fedora_object) {
-  global $user;
-  module_load_include('inc', 'islandora_basic_collection', 'includes/utilities');
-  module_load_include('inc', 'islandora_paged_content', 'includes/utilities');
+function islandora_markup_editor_oa_uri_mint() {
 
-  $stroke_width = variable_get('image_annotation_annotation_stroke_width', '1%');
-  $pages = array();
-  $results = array();
-  $results['uid'] = $user->uid;
-  $results['position'] = "1";
-  $results['pages'] = $pages[0] = $fedora_object->id;
-  $results['title'] = $fedora_object->label;
-  $results['no_edit'] = FALSE;
-  $results['page_count'] = 1;
-  $results['islandora_anno_stroke_width'] = '1%';
-
-  $place_entity_collection = variable_get('islandora_entities_places_collection', 'islandora:entity_collection');
-  $results['create_entity_callbacks']['places'] = url('islandora/object/' . $place_entity_collection . '/manage/overview/ingest');
-  $event_entity_collection = variable_get('islandora_entities_events_collection', 'islandora:entity_collection');
-  $results['create_entity_callbacks']['events'] = url('islandora/object/' . $event_entity_collection . '/manage/overview/ingest');
-  $organization_entity_collection = variable_get('islandora_entities_organizations_collection', 'islandora:entity_collection');
-  $results['create_entity_callbacks']['organizations'] = url('islandora/object/' . $organization_entity_collection . '/manage/overview/ingest');
-  $person_entity_collection = variable_get('islandora_entities_people_collection', 'islandora:entity_collection');
-  $results['create_entity_callbacks']['people'] = url('islandora/object/' . $person_entity_collection . '/manage/overview/ingest');
+  $results = array("uri","cwrc.ca/oa/namespace:UUID");
 
   drupal_json_output($results);
 }
