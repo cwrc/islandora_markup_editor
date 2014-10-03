@@ -3,10 +3,10 @@
 $(function(){
 	cD = {};
 	(function(){
-		var cwrcApi = new CwrcApi('http://apps.testing.cwrc.ca/services/ccm-api/', $);
+		var cwrcApi = new CwrcApi('/services/ccm-api/', $);
 		//var cwrcApi = new CwrcApi('http://localhost/cwrc/', $);
 		
-		var geonameUrl = "http://apps.testing.cwrc.ca/cwrc-mtp/geonames/";
+		var geonameUrl = "/cwrc-mtp/geonames/";
 		
 		// parameters
 
@@ -177,7 +177,8 @@ $(function(){
 		};
 
 		entity.initialize = function() {
-					
+            entity.setPersonSchema("http://cwrc.ca/schemas/entities.rng");	
+
 			// entity.setPersonSchema("./schemas/entities.rng");
 			// entity.setOrganizationSchema("./schemas/entities.rng");
 

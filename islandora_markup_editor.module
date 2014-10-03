@@ -26,6 +26,15 @@ function islandora_markup_editor_menu() {
     'access callback' => 'islandora_object_access_callback',
     'access arguments' => array(ISLANDORA_CRITICAL_EDITION_EDIT_WITH_CWRC_WRITER, 3),
   );
+  $items['islandora/markupeditor/oa/hasTarget/%islandora_object'] = array(
+    'title' => 'Open Annotation hasTarget Query',
+    'page callback' => 'islandora_markup_editor_hasTarget',
+    'page arguments' => array(3),
+    'type' => MENU_CALLBACK,
+    'file' => 'includes/callbacks_oa.inc',
+    'access callback' => 'islandora_object_access_callback',
+    'access arguments' => array(ISLANDORA_VIEW_OBJECTS, 3),
+  );
   return $items;
 }
 
@@ -136,6 +145,7 @@ function islandora_markup_editor_library() {
       "$module_path/CWRC-Writer/src/css/style.css" => array(),
       "$module_path/CWRC-Writer/src/css/islandora_style.css" => array(),
       "$module_path/CWRC-Writer/src/css/layout-default-latest.css" => array(),
+      "$module_path/CWRC-Writer/src/js/lib/jstree/themes/cwrc/style.css" => array(),
       "$module_path/CWRC-Writer/src/js/lib/snippet/jquery.snippet.css" => array(),
       "$module_path/CWRC-Writer/src/smoothness/jquery-ui-1.10.4.custom.css" => array(),
       "$module_path/CWRC-Writer/src/js/lib/bootstrap/bootstrap.css" => array(),

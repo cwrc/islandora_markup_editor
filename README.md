@@ -4,7 +4,7 @@ Current build status:
 [![Build Status](https://travis-ci.org/discoverygarden/islandora_markup_editor.png?branch=7.x)](https://travis-ci.org/discoverygarden/islandora_markup_editor)
 
 Islandora Markup Editor
-====================================
+===================================
 
 ## Introduction
 
