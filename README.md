@@ -43,3 +43,107 @@ If you would like to contribute to this module, please check out our helpful [Do
 
 [GPLv3](http://www.gnu.org/licenses/gpl-3.0.txt)
 
+
+# Documentation: Open Annotation
+
+
+
+
+## Bundle of annotations with a given 'hasTarget'
+
+#### URL syntax
+islandora/markupeditor/oa/HasTarget/{pid or uri?}
+
+For paging of results - unsupported as of 2014-10-06
+
+islandora/markupeditor/oa/HasTarget/{pid or uri?}?page.start={}&page.rows={}
+
+#### HTTP Method
+GET
+
+#### Headers
+Accept: application/json
+
+#### Request parameters
+| Name          | Description                                                  |
+| ------------- | ------------------------------------------------------------ |
+| page.start    | (optional) For paging of results - the results page    
+| page.rows     | (optional) For paging of results - the number of rows per page    
+
+#### Response: 200 OK
+##### Content-Type: application/json
+| Name          | Description                                                  |
+| ------------- | ------------------------------------------------------------ |
+| hasTarget     | The query 'hasTarget' uri  
+| numFound      | The number of results in the 'oa_items' array
+| page.start    | (optional) For paging of results - the results page of the current 'oa_items'    
+| page.rows     | (optional) For paging of results - the number of rows per page    
+| oa_items      | The number of results identified by the 'hasTarget' uri    
+
+
+#### Example Response
+```JSON
+{
+    "hasTarget": "islandora:b305fc90-a59e-415e-8c58-f7ee5d06ad2f",
+    "numFound": "0",
+    "page": {
+        "start": "0",
+        "rows": "5"
+    },
+    "oa_items": [] []
+}
+```
+
+
+
+
+
+## Mint URI 
+
+#### URL syntax
+islandora/markupeditor/oa/mintURI
+
+#### HTTP Method
+GET
+
+#### Headers
+Accept: application/json
+
+#### Request parameters
+None
+
+#### Response: 200 OK
+##### Content-Type: application/json
+| Name          | Description                                                  |
+| ------------- | ------------------------------------------------------------ |
+| uri           | OA minted annotation
+
+#### Example Response
+```JSON
+{"uri","http:\/\/id.cwrc.ca\/cwrc:2755fb77-b11a-43b8-947c-43654b1cb6d6"}
+```
+
+
+
+
+## Create A New Annotation
+
+#### URL syntax
+islandora/markupeditor/oa/annotation
+
+#### HTTP Method
+POST
+
+#### Headers
+Accept: application/json
+
+#### POST (form-data)
+| Name          | Description                                                  |
+| ------------- | ------------------------------------------------------------ |
+| hasTarget     | hasTarget URI for the annotation
+| annotation    | RDF XML serialiazation of the annotation 
+
+#### Response: 201 Created
+##### Content-Type: application/json
+Returns the same response as a [GET Annotation](#response-200-ok) request.
+

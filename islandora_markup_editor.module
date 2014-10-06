@@ -4,6 +4,11 @@
  * Handles the creation/display of islandora:markupEditorCModel objects.
  */
 
+
+define('ISLANDORA_OPEN_ANNOTATION_VIEW', 'view open annotations');
+define('ISLANDORA_OPEN_ANNOTATION_CREATE', 'create open annotations');
+
+
 /**
  * Implements hook_menu().
  */
@@ -34,20 +39,48 @@ function islandora_markup_editor_menu() {
     'page arguments' => array(4),
     'type' => MENU_CALLBACK,
     'file' => 'includes/callbacks_oa.inc',
-    'access arguments' => array(ISLANDORA_IMAGE_ANNOTATION_VIEW),
+    'access arguments' => array(ISLANDORA_OPEN_ANNOTATION_VIEW),
   );
 
-  $items['islandora/markupeditor/oa/mintURI/%'] = array(
+  $items['islandora/markupeditor/oa/mintURI'] = array(
     'title' => 'Open Annotation URI minting',
     'page callback' => 'islandora_markup_editor_oa_uri_mint',
-    'page arguments' => array(3),
+    'page arguments' => array(4),
     'type' => MENU_CALLBACK,
     'file' => 'includes/callbacks_oa.inc',
-    'access arguments' => array(ISLANDORA_IMAGE_ANNOTATION_CREATE),
+    'access arguments' => array(ISLANDORA_OPEN_ANNOTATION_CREATE),
+  );
+
+  $items['islandora/markupeditor/oa/annotation'] = array(
+    'title' => 'Open Annotation Creation',
+    'page callback' => 'islandora_markup_editor_oa_annotation',
+    'page arguments' => array(4),
+    'type' => MENU_CALLBACK,
+    'file' => 'includes/callbacks_oa.inc',
+    'access arguments' => array(ISLANDORA_OPEN_ANNOTATION_CREATE),
   );
 
   return $items;
 }
+
+
+/**
+ * Implements hook_permission().
+ */
+function islandora_markup_editor_permission() {
+  return array(
+    ISLANDORA_OPEN_ANNOTATION_VIEW => array(
+      'title' => t('View open annotations'),
+      'description' => t('View open annotations.'),
+    ),
+    ISLANDORA_OPEN_ANNOTATION_CREATE => array(
+      'title' => t('Create open annotations'),
+      'description' => t('Create open Annotations'),
+    ),
+  );
+}
+
+
 
 /**
  * Implements hook_islandora_required_objects().

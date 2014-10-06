@@ -16,52 +16,17 @@ function islandora_markup_editor_oa_hasTarget($hasTarget_uri) {
     //$result_array = array("success"=> urldecode($hasTarget_uri).urlencode("a/a") );
     
     $result_array = array( 
-'
-<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:cw="http://cwrc.ca/ns/cw#" xmlns:oa="http://www.w3.org/ns/oa#" xmlns:foaf="http://xmlns.com/foaf/0.1/">
-    <rdf:Description rdf:about="http://apps.testing.cwrc.ca/editor/documents/null">
-        <cw:mode>0</cw:mode>
-    </rdf:Description>
-    <rdf:Description xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://id.cwrc.ca/annotation/6a82d26e-b059-4e25-88c0-35fd00085709">
-        <oa:hasTarget xmlns:oa="http://www.w3.org/ns/oa#" rdf:resource="http://id.cwrc.ca/target/1e7c9ad5-358f-4c7f-90e3-0515a05b5558"/>
-        <oa:hasBody xmlns:oa="http://www.w3.org/ns/oa#" rdf:resource="http://id.cwrc.ca/person/56c9f7fe-d0ef-4c18-9563-e26272f9ee29"/>
-        <oa:annotatedBy xmlns:oa="http://www.w3.org/ns/oa#" rdf:resource=""/>
-        <oa:annotatedAt xmlns:oa="http://www.w3.org/ns/oa#">2014-10-03T22:56:06.440Z</oa:annotatedAt>
-        <oa:serializedBy xmlns:oa="http://www.w3.org/ns/oa#" rdf:resource=""/>
-        <oa:serializedAt xmlns:oa="http://www.w3.org/ns/oa#">2014-10-03T22:56:06.440Z</oa:serializedAt>
-        <rdf:type rdf:resource="http://www.w3.org/ns/oa#Annotation"/>
-        <oa:motivatedBy xmlns:oa="http://www.w3.org/ns/oa#" rdf:resource="http://www.w3.org/ns/oa#tagging"/>
-        <oa:motivatedBy xmlns:oa="http://www.w3.org/ns/oa#" rdf:resource="http://www.w3.org/ns/oa#identifying"/>
-        <cw:hasCertainty xmlns:cw="http://cwrc.ca/ns/cw#" rdf:resource="http://cwrc.ca/ns/cw#reasonable"/>
-        <cw:cwrcInfo xmlns:cw="http://cwrc.ca/ns/cw#">{"id":"42172560","name":"Houde, Camillien","repository":"viaf"}</cw:cwrcInfo>
-        <cw:cwrcAttributes xmlns:cw="http://cwrc.ca/ns/cw#">{"cert":"reasonably certain","ref":"42172560"}</cw:cwrcAttributes>
-    </rdf:Description>
-    <rdf:Description xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://id.cwrc.ca/person/56c9f7fe-d0ef-4c18-9563-e26272f9ee29">
-        <rdf:type rdf:resource="http://www.w3.org/ns/oa#SemanticTag"/>
-        <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Person"/>
-    </rdf:Description>
-    <rdf:Description xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://id.cwrc.ca/target/1e7c9ad5-358f-4c7f-90e3-0515a05b5558">
-        <oa:hasSource xmlns:oa="http://www.w3.org/ns/oa#" rdf:resource="http://id.cwrc.ca/doc/690e168d-a5fc-4339-9772-66fd5b2cc315"/>
-        <rdf:type rdf:resource="http://www.w3.org/ns/oa#SpecificResource"/>
-        <oa:hasSelector xmlns:oa="http://www.w3.org/ns/oa#" rdf:resource="http://id.cwrc.ca/selector/e2c48327-c2cf-4731-ae6d-6ba0f352c546"/>
-    </rdf:Description>
-    <rdf:Description xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://id.cwrc.ca/selector/e2c48327-c2cf-4731-ae6d-6ba0f352c546">
-        <rdf:value>xpointer(//persName[@annotationId="ent_88"])</rdf:value>
-        <rdf:type rdf:resource="http://www.w3.org/ns/oa#FragmentSelector"/>
-    </rdf:Description>
-</rdf:RDF>
-'
+      '<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:cw="http://cwrc.ca/ns/cw#" xmlns:oa="http://www.w3.org/ns/oa#" xmlns:foaf="http://xmlns.com/foaf/0.1/"><rdf:Description rdf:about="http://apps.testing.cwrc.ca/editor/documents/null"><cw:mode>0</cw:mode></rdf:Description><rdf:Description xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://id.cwrc.ca/annotation/6a82d26e-b059-4e25-88c0-35fd00085709"><oa:hasTarget xmlns:oa="http://www.w3.org/ns/oa#" rdf:resource="http://id.cwrc.ca/target/1e7c9ad5-358f-4c7f-90e3-0515a05b5558"/><oa:hasBody xmlns:oa="http://www.w3.org/ns/oa#" rdf:resource="http://id.cwrc.ca/person/56c9f7fe-d0ef-4c18-9563-e26272f9ee29"/><oa:annotatedBy xmlns:oa="http://www.w3.org/ns/oa#" rdf:resource=""/><oa:annotatedAt xmlns:oa="http://www.w3.org/ns/oa#">2014-10-03T22:56:06.440Z</oa:annotatedAt><oa:serializedBy xmlns:oa="http://www.w3.org/ns/oa#" rdf:resource=""/><oa:serializedAt xmlns:oa="http://www.w3.org/ns/oa#">2014-10-03T22:56:06.440Z</oa:serializedAt><rdf:type rdf:resource="http://www.w3.org/ns/oa#Annotation"/><oa:motivatedBy xmlns:oa="http://www.w3.org/ns/oa#" rdf:resource="http://www.w3.org/ns/oa#tagging"/><oa:motivatedBy xmlns:oa="http://www.w3.org/ns/oa#" rdf:resource="http://www.w3.org/ns/oa#identifying"/><cw:hasCertainty xmlns:cw="http://cwrc.ca/ns/cw#" rdf:resource="http://cwrc.ca/ns/cw#reasonable"/><cw:cwrcInfo xmlns:cw="http://cwrc.ca/ns/cw#">{"id":"42172560","name":"Houde, Camillien","repository":"viaf"}</cw:cwrcInfo><cw:cwrcAttributes xmlns:cw="http://cwrc.ca/ns/cw#">{"cert":"reasonably certain","ref":"42172560"}</cw:cwrcAttributes></rdf:Description><rdf:Description xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://id.cwrc.ca/person/56c9f7fe-d0ef-4c18-9563-e26272f9ee29"><rdf:type rdf:resource="http://www.w3.org/ns/oa#SemanticTag"/><rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Person"/></rdf:Description><rdf:Description xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://id.cwrc.ca/target/1e7c9ad5-358f-4c7f-90e3-0515a05b5558"><oa:hasSource xmlns:oa="http://www.w3.org/ns/oa#" rdf:resource="http://id.cwrc.ca/doc/690e168d-a5fc-4339-9772-66fd5b2cc315"/><rdf:type rdf:resource="http://www.w3.org/ns/oa#SpecificResource"/><oa:hasSelector xmlns:oa="http://www.w3.org/ns/oa#" rdf:resource="http://id.cwrc.ca/selector/e2c48327-c2cf-4731-ae6d-6ba0f352c546"/></rdf:Description><rdf:Description xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://id.cwrc.ca/selector/e2c48327-c2cf-4731-ae6d-6ba0f352c546"><rdf:value>xpointer(//persName[@annotationId="ent_88"])</rdf:value><rdf:type rdf:resource="http://www.w3.org/ns/oa#FragmentSelector"/></rdf:Description></rdf:RDF>'
       ); 
 
     $cwrc = array(
       "hasTarget" => urldecode($hasTarget_uri) 
-      , "numFound" => "0"
+      , "numFound" => "1"
       , "page" => array("start" => "0", "rows" => "5" )
       , "oa_items" => $result_array
       );
     drupal_json_output(
-      array(
-        "response" => $cwrc 
-        )
+        $cwrc 
       );
   }
 
@@ -78,6 +43,56 @@ function islandora_markup_editor_oa_hasTarget($hasTarget_uri) {
     drupal_json_output(array("Error" => "An error during the lookup"));
   }
 }
+
+
+/**
+ * Menu callback to mint a new URI.
+ *
+ * 
+ * @param $optional_UUID
+ *    allows the specification of a UUID that becomes part of the URI 
+ *   
+ */
+function islandora_markup_editor_oa_uri_mint($optional_UUID = null) {
+  // URI cwrc.ca/oa/namespace:UUID
+  
+  // ToDo: should change to be the same namespace as the target
+  $namespace = "cwrc"; 
+  $prefix = "http://id.cwrc.ca/";
+
+  if ($optional_UUID) 
+  {
+    $results = array("uri" => $prefix.$namespace.":".$optional_UUID );
+  }
+  else 
+  {
+    $connection = islandora_get_tuque_connection();
+    $uuid = $connection->repository->getNextIdentifier($namespace, TRUE);
+
+    $results = array("uri" => $prefix.$uuid );
+  }
+
+  drupal_json_output($results);
+}
+
+
+/**
+ * Menu callback to handle the REST methods to handle an OA annotation.
+ *
+ * model after: islandora_image_annotation - islandora_rest_datastream and 
+ *    islandora_rest_get_response functions to model the REST functionality
+ *   
+ */
+function islandora_markup_editor_oa_annotation() {
+  
+  $results = array();
+  
+  drupal_add_http_header('Status', 201);
+ 
+  drupal_json_output($results);
+}
+
+
 
 
 function islandora_markup_editor_oa_update() {
@@ -121,15 +136,3 @@ function islandora_markup_editor_oa_update() {
 }
 
 
-/**
- * Menu callback to mint a new URI.
- *
- * 
- *   
- */
-function islandora_markup_editor_oa_uri_mint() {
-
-  $results = array("uri","cwrc.ca/oa/namespace:UUID");
-
-  drupal_json_output($results);
-}
