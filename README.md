@@ -140,6 +140,7 @@ Accept: application/json
 #### POST (form-data)
 | Name          | Description                                                  |
 | ------------- | ------------------------------------------------------------ |
+| URI or PID?   | The identifier for the annotation 
 | hasTarget     | hasTarget URI for the annotation
 | annotation    | RDF XML serialiazation of the annotation 
 
