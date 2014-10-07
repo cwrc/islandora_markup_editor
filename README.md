@@ -52,11 +52,11 @@ If you would like to contribute to this module, please check out our helpful [Do
 ## Bundle of annotations with a given 'hasTarget'
 
 #### URL syntax
-islandora/markupeditor/oa/HasTarget/{pid or uri?}
+islandora/markupeditor/oa/HasTarget/{uri encoded}
 
 For paging of results - unsupported as of 2014-10-06
 
-islandora/markupeditor/oa/HasTarget/{pid or uri?}?page.start={}&page.rows={}
+islandora/markupeditor/oa/HasTarget/{uri encoded}?page.start={}&page.rows={}
 
 #### HTTP Method
 GET
@@ -140,7 +140,7 @@ Accept: application/json
 #### POST (form-data)
 | Name          | Description                                                  |
 | ------------- | ------------------------------------------------------------ |
-| URI or PID?   | The identifier for the annotation 
+| URI           | The identifier for the annotation 
 | hasTarget     | hasTarget URI for the annotation
 | annotation    | RDF XML serialiazation of the annotation 
 
