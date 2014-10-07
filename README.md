@@ -44,12 +44,73 @@ If you would like to contribute to this module, please check out our helpful [Do
 [GPLv3](http://www.gnu.org/licenses/gpl-3.0.txt)
 
 
-# Documentation: Open Annotation
 
 
 
+# Documentation: CWRC-Writer API
+#
 
-## Bundle of annotations with a given 'hasTarget'
+
+## setup info for the cwrc-writer/viewer
+
+#### URL syntax
+islandora/markupeditor/setup/{PID}
+
+#### HTTP Method
+GET
+
+
+#### Response: 200 OK
+##### Content-Type: application/json
+
+#### Example Response
+```JSON
+{
+    "uid": "1",
+    "position": "1",
+    "pages": "islandora:b305fc90-a59e-415e-8c58-f7ee5d06ad2f",
+    "title": "Sample xml doc",
+    "no_edit": false,
+    "page_count": 1,
+    "islandora_anno_stroke_width": "1%",
+    "create_entity_callbacks": {
+        "places": "/islandora/object/islandora%3Aentity_collection/manage/overview/ingest",
+        "events": "/islandora/object/islandora%3Aentity_collection/manage/overview/ingest",
+        "organizations": "/islandora/object/islandora%3Aentity_collection/manage/overview/ingest",
+        "people": "/islandora/object/islandora%3Aentity_collection/manage/overview/ingest"
+    }
+}
+```
+
+
+
+## persist document data
+
+#### URL syntax
+islandora/markupeditor/save_data/{PID}
+
+#### HTTP Method
+PUT
+
+#### Request parameters
+#### Request parameters
+| Name          | Description                                                  |
+| ------------- | ------------------------------------------------------------ |
+| text          | content to persist
+| schema        | schema describing the content
+| valid         | (optional)
+
+#### Response: 200 OK
+##### Content-Type: application/json
+
+response is the document
+
+
+
+# Documentation: Open Annotation API
+
+
+## set of annotations with a given 'hasTarget'
 
 #### URL syntax
 islandora/markupeditor/oa/HasTarget/{uri encoded}
