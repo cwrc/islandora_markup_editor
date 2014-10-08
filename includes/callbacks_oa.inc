@@ -5,6 +5,10 @@
  * Handles the OA callback requirements for islandora_markup_editor module.
  */
 
+
+define("ISLANDORA_MARKUP_EDITOR_OA_DATASTREAM",   "OA");
+
+
 /**
  * Menu callback for the editor to persist OA Open Annotation data.
  *
@@ -137,7 +141,7 @@ QUERY;
     foreach ($query_results as $item) {
       $count++;
       $fedora_object = islandora_object_load($item['id']['value']);
-      $tmp = $fedora_object["OA"];
+      $tmp = $fedora_object[ISLANDORA_MARKUP_EDITOR_OA_DATASTREAM]->content;
       if (!isset($tmp)) { 
         array_push ($oa_array, "");
       }
@@ -189,17 +193,17 @@ QUERY;
  *   typically contain the following fields:
  *   - pid: Optional, the PID of the requested resource
  */
-function islandora_markup_editor_oa_annotation_v2(array $url_parameters) {
+function islandora_markup_editor_oa_annotation_v2($uri = NULL) {
  
   // include REST utilities for the API callbacks 
   module_load_include('inc', 'islandora_rest', "includes/utilities");
 
-  $url_parameters = array_filter($url_parameters);
+  //$url_parameters = array_filter($url_parameters);
   $request_method = islandora_rest_get_request_method();
-  $pid = !empty($url_parameters['pid']) ? $url_parameters['pid'] : FALSE;
-  if ( $pid===FALSE ) {
+  //$pid = !empty($url_parameters['pid']) ? $url_parameters['pid'] : FALSE;
+  //if ( $pid===FALSE ) {
     $pid = islandora_markup_editor_oa_convert_uri_to_pid($uri);
-  }
+  //}
   $dsid = FALSE;
 
   try {
@@ -336,12 +340,12 @@ function islandora_markup_editor_oa_annotation_post_response(array $parameters) 
   $tuque->repository->ingestObject($fedora_object);
 
   // add datastream
-  if (!isset($fedora_object["OA"])) {
-    $obj_ds = $fedora_object->constructDatastream('OA', 'M');
+  if (!isset($fedora_object[ISLANDORA_MARKUP_EDITOR_OA_DATASTREAM])) {
+    $obj_ds = $fedora_object->constructDatastream(ISLANDORA_MARKUP_EDITOR_OA_DATASTREAM, 'M');
     $fedora_object->ingestDatastream($obj_ds);
   }
   else {
-    $obj_ds = $fedora_object["OBJ"];
+    $obj_ds = $fedora_object[ISLANDORA_MARKUP_EDITOR_OA_DATASTREAM];
   }
   $obj_ds->setContentFromString($annotation);
 
