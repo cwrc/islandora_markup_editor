@@ -319,11 +319,15 @@ function islandora_markup_editor_oa_annotation_put_response(array $parameters) {
 function islandora_markup_editor_oa_annotation_post_response(array $parameters) {
   $request = $parameters['request'];
 
-  $uri = $request['uri'];
+  $annotation = $request['annotation'];
+  $hasTarget = $request['hasTarget'];
 
+  $uri = $request['uri'];
   $pid = islandora_markup_editor_oa_convert_uri_to_pid($uri);
 
   $tuque = islandora_get_tuque_connection();
+
+  // create Fedora Object
   $fedora_object = $tuque->repository->constructObject($pid);
 
   #$fedora_object->label = isset($request['label']) ? $request['label'] : $fedora_object->label;
@@ -331,6 +335,7 @@ function islandora_markup_editor_oa_annotation_post_response(array $parameters) 
 
   $tuque->repository->ingestObject($fedora_object);
 
+  // add datastream
   if (!isset($fedora_object["OA"])) {
     $obj_ds = $fedora_object->constructDatastream('OA', 'M');
     $fedora_object->ingestDatastream($obj_ds);
@@ -338,10 +343,11 @@ function islandora_markup_editor_oa_annotation_post_response(array $parameters) 
   else {
     $obj_ds = $fedora_object["OBJ"];
   }
-  $obj_ds->setContentFromString($cwrc);
+  $obj_ds->setContentFromString($annotation);
 
 
-   $item->relationships->add(ISLANDORA_RELS_EXT_URI, 'targets', $uri);
+  // add RELS-EXT hasTarget
+  $item->relationships->add(ISLANDORA_RELS_EXT_URI, 'targets', $hasTarget);
 
 
   drupal_add_http_header('Status', 201);
