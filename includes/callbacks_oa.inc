@@ -7,7 +7,8 @@
 
 
 define("ISLANDORA_MARKUP_EDITOR_OA_DATASTREAM",   "OA");
-
+define("ISLANDORA_MARKUP_EDITOR_OA_CMODEL",   "cwrc:openAnnotationCModel");
+define("ISLANDORA_MARKUP_EDITOR_OA_HASTARGET", "cwrc:hasTarget");
 
 /**
  * Menu callback for the editor to persist OA Open Annotation data.
@@ -141,7 +142,10 @@ QUERY;
     foreach ($query_results as $item) {
       $count++;
       $fedora_object = islandora_object_load($item['id']['value']);
-      $tmp = $fedora_object[ISLANDORA_MARKUP_EDITOR_OA_DATASTREAM]->content;
+      if (isset($fedora_object[ISLANDORA_MARKUP_EDITOR_OA_DATASTREAM]))
+      {
+        $tmp = $fedora_object[ISLANDORA_MARKUP_EDITOR_OA_DATASTREAM]->content;
+      }
       if (!isset($tmp)) { 
         array_push ($oa_array, "");
       }
@@ -198,12 +202,16 @@ function islandora_markup_editor_oa_annotation_v2($uri = NULL) {
   // include REST utilities for the API callbacks 
   module_load_include('inc', 'islandora_rest', "includes/utilities");
 
+  $endpoint = 'object';
+
   //$url_parameters = array_filter($url_parameters);
   $request_method = islandora_rest_get_request_method();
   //$pid = !empty($url_parameters['pid']) ? $url_parameters['pid'] : FALSE;
   //if ( $pid===FALSE ) {
-    $pid = islandora_markup_editor_oa_convert_uri_to_pid($uri);
+  //  $pid = islandora_markup_editor_oa_convert_uri_to_pid($uri);
   //}
+
+  $pid = islandora_markup_editor_oa_convert_uri_to_pid($uri);
   $dsid = FALSE;
 
   try {
@@ -213,11 +221,14 @@ function islandora_markup_editor_oa_annotation_v2($uri = NULL) {
     // Check Drupal Permissions. Throws 401, 403, if access is denied.
     islandora_markup_editor_require_access($endpoint, $request_method, $resource);
 
+    $response = NULL;
     // Generate the Response.
     $response_function = "islandora_markup_editor_oa_annotation_{$request_method}_response";
     if (function_exists($response_function)) {
       $parameters = array(
-        'url' => $url_parameters,
+        'uri' => $uri,
+        'pid' => $pid,
+        'request_method' => $request_method,
         'request' => islandora_rest_get_request_parameters(),
         'resource' => $resource,
       );
@@ -321,14 +332,56 @@ function islandora_markup_editor_oa_annotation_put_response(array $parameters) {
  *   Returns the same response as a GET request to the existing object.
  */
 function islandora_markup_editor_oa_annotation_post_response(array $parameters) {
+  
+  module_load_include('inc', 'islandora', 'includes/utilities');
+
   $request = $parameters['request'];
 
-  $annotation = $request['annotation'];
+  $annotation_xml = $request['annotation'];
+
   $hasTarget = $request['hasTarget'];
+  //$content_model = ISLANDORA_MARKUP_EDITOR_OA_CMODEL;
 
   $uri = $request['uri'];
   $pid = islandora_markup_editor_oa_convert_uri_to_pid($uri);
 
+
+    // We need to prepare a new object.
+  $fedora_object
+    = islandora_prepare_new_object(
+      $pid
+      , NULL 
+      , array()
+      , array(ISLANDORA_MARKUP_EDITOR_OA_CMODEL)
+      , array()
+    );
+
+  $fedora_object->relationships->add(ISLANDORA_RELS_EXT_URI, 'targets', $hasTarget);
+  $fedora_object->relationships->add('http://cwrc.ca/ns/relsext#', ISLANDORA_MARKUP_EDITOR_OA_HASTARGET, $hasTarget);
+
+  // create content datastream
+  $oa_ds 
+    = $fedora_object->constructDatastream(ISLANDORA_MARKUP_EDITOR_OA_DATASTREAM, 'M');
+  $oa_ds->label = ISLANDORA_MARKUP_EDITOR_OA_DATASTREAM;
+  $oa_ds->mimeType = 'text/xml';
+  $oa_ds->setContentFromString($annotation_xml);
+  $fedora_object->ingestDatastream($oa_ds);
+
+
+    watchdog('islandora_markup_editor',
+      'pid @pid</br>',
+      array(
+        '@pid' => $pid,
+      ),
+      WATCHDOG_ERROR
+    );
+
+
+  islandora_add_object($fedora_object);
+
+
+
+/*
   $tuque = islandora_get_tuque_connection();
 
   // create Fedora Object
@@ -342,22 +395,34 @@ function islandora_markup_editor_oa_annotation_post_response(array $parameters) 
   // add datastream
   if (!isset($fedora_object[ISLANDORA_MARKUP_EDITOR_OA_DATASTREAM])) {
     $obj_ds = $fedora_object->constructDatastream(ISLANDORA_MARKUP_EDITOR_OA_DATASTREAM, 'M');
+    $new_ds->mimetype = 'text/xml';
+    $new_ds->content = $annotation_xml;
     $fedora_object->ingestDatastream($obj_ds);
   }
   else {
     $obj_ds = $fedora_object[ISLANDORA_MARKUP_EDITOR_OA_DATASTREAM];
+    $obj_ds->setContentFromString($annotation_xml);
   }
-  $obj_ds->setContentFromString($annotation);
-
 
   // add RELS-EXT hasTarget
-  $item->relationships->add(ISLANDORA_RELS_EXT_URI, 'targets', $hasTarget);
+  $fedora_object->relationships->add(ISLANDORA_RELS_EXT_URI, 'targets', $hasTarget);
+  $fedora_object->relationships->add('http://cwrc.ca/ns/relsext#', 'hasTarget', $hasTarget);
+  //is member of
+  $fedora_object->relationships->add(FEDORA_MODEL_URI, 'hasModel', $content_model);
+
+  islandora_add_object($fedora_object);
+*/
+
 
 
   drupal_add_http_header('Status', 201);
 
+
+
+  return drupal_json_output($parameters);
+
   // Mock the Get Response.
-  //return islandora_markup_editor_oa_annotation_get_response(array('resource' => $object));
+  //return islandora_markup_editor_oa_annotation_get_response(array('resource' => $fedora_object));
 }
 
 
@@ -431,7 +496,8 @@ function islandora_markup_editor_oa_update() {
 
 function islandora_markup_editor_oa_convert_uri_to_pid($uri)
 {
-  preg_replace("/^.+\/(cwrc:\w*)/i",$url_parameters['uri'], $match_array);
+  $match_array = array();
+  preg_match("/^.+\/(cwrc:[\w-]*)/i",$uri, $match_array);
   $pid = !empty($match_array[1]) ? $match_array[1] : FALSE;
   return $pid;
 }
@@ -478,7 +544,7 @@ function islandora_markup_editor_require_access($endpoint, $request_method, $res
  *   TRUE if the user is allowed to access the rest end-point, FALSE otherwise.
  */
 function islandora_markup_editor_accessible($endpoint, $request_method, $resource = FALSE) {
-  $perm = islandora__resource_access_permission($endpoint, $request_method);
+  $perm = islandora_markup_editor_resource_access_permission($endpoint, $request_method);
   if (is_subclass_of($resource, 'AbstractObject')) {
     return islandora_object_access($perm, $resource);
   }
@@ -497,7 +563,7 @@ function islandora_markup_editor_accessible($endpoint, $request_method, $resourc
  * @param array $request_method
  *   The request method (GET/POST/PUT/DELETE).
  */
-function islandora_rest_resource_access_permission($endpoint, $request_method) {
+function islandora_markup_editor_resource_access_permission($endpoint, $request_method) {
   $perm_map = array(
     'object' => array(
       'GET' => ISLANDORA_OPEN_ANNOTATION_VIEW,
