@@ -235,6 +235,16 @@ function islandora_markup_editor_oa_annotation_v2($uri = NULL) {
         'resource' => $resource,
       );
 
+
+//    watchdog('islandora_markup_editor',
+//      var_export($parameters),
+//      array(
+//      ),
+//      WATCHDOG_ERROR
+//    );
+
+
+
       // Can throw 400, 401, 500, etc.
       $response = $response_function($parameters);
     }
@@ -356,6 +366,17 @@ function islandora_markup_editor_oa_annotation_post_response(array $parameters) 
   $pid = islandora_markup_editor_oa_convert_uri_to_pid($uri);
 
 
+    watchdog('islandora_markup_editor post',
+      'pid @pid</br>',
+      array(
+        '@pid' => $pid,
+      ),
+      WATCHDOG_ERROR
+    );
+
+
+
+
     // We need to prepare a new object.
   $fedora_object
     = islandora_prepare_new_object(
@@ -366,7 +387,8 @@ function islandora_markup_editor_oa_annotation_post_response(array $parameters) 
       , array()
     );
 
-  $fedora_object->relationships->add(ISLANDORA_RELS_EXT_URI, 'targets', $hasTarget);
+  # ToDo: temporary 'targets', consider removing
+  $fedora_object->relationships->add(ISLANDORA_RELS_EXT_URI, 'targets', substr( $hasTarget, strrpos( $hasTarget, '/' )+1 ) );
   $fedora_object->relationships->add('http://cwrc.ca/ns/relsext#', ISLANDORA_MARKUP_EDITOR_OA_HASTARGET, $hasTarget);
 
   // create content datastream
@@ -377,14 +399,6 @@ function islandora_markup_editor_oa_annotation_post_response(array $parameters) 
   $oa_ds->setContentFromString($annotation_xml);
   $fedora_object->ingestDatastream($oa_ds);
 
-
-    watchdog('islandora_markup_editor',
-      'pid @pid</br>',
-      array(
-        '@pid' => $pid,
-      ),
-      WATCHDOG_ERROR
-    );
 
 
   islandora_add_object($fedora_object);
