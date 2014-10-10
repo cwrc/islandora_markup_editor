@@ -7,6 +7,7 @@
 
 
 define("ISLANDORA_MARKUP_EDITOR_OA_DATASTREAM",   "OA");
+define("ISLANDORA_MARKUP_EDITOR_OA_DATASTREAM_LABEL", "Open Annotation Serialization");
 define("ISLANDORA_MARKUP_EDITOR_OA_CMODEL",   "cwrc:openAnnotationCModel");
 define("ISLANDORA_MARKUP_EDITOR_OA_HASTARGET", "cwrc:hasTarget");
 
@@ -159,7 +160,8 @@ QUERY;
 
     drupal_json_output( 
       array( 
-        "hasTarget" => "urldecode($hasTarget_uri)"
+        //"hasTarget" => "urldecode($hasTarget_uri)"
+        "hasTarget" => "$hasTarget_uri"
         , "numFound" => "$count"
         , "page" => array("start" => "0", "rows" => "5" )
         , "oa_items" => $oa_array
@@ -268,9 +270,17 @@ function islandora_markup_editor_oa_annotation_v2($uri = NULL) {
 
 function islandora_markup_editor_oa_annotation_get_response(array $parameters) {
   
-  drupal_add_http_header('Status', 405);
- 
-  drupal_json_output($parameters);
+  $fedora_object = $parameters['resource'];
+
+  if (!isset($fedora_object)) {
+    $tmp = $parameters['pid'];
+  }
+  else {
+    $tmp = $fedora_object[ISLANDORA_MARKUP_EDITOR_OA_DATASTREAM]->content;
+  }
+
+  //drupal_add_http_header('Status', 405);
+  drupal_json_output($tmp);
 }
 
 
@@ -362,7 +372,7 @@ function islandora_markup_editor_oa_annotation_post_response(array $parameters) 
   // create content datastream
   $oa_ds 
     = $fedora_object->constructDatastream(ISLANDORA_MARKUP_EDITOR_OA_DATASTREAM, 'M');
-  $oa_ds->label = ISLANDORA_MARKUP_EDITOR_OA_DATASTREAM;
+  $oa_ds->label = ISLANDORA_MARKUP_EDITOR_OA_DATASTREAM_LABEL;
   $oa_ds->mimeType = 'text/xml';
   $oa_ds->setContentFromString($annotation_xml);
   $fedora_object->ingestDatastream($oa_ds);
@@ -497,7 +507,9 @@ function islandora_markup_editor_oa_update() {
 function islandora_markup_editor_oa_convert_uri_to_pid($uri)
 {
   $match_array = array();
-  preg_match("/^.+\/(cwrc:[\w-]*)/i",$uri, $match_array);
+  //preg_match("/^.*\/(cwrc:[\w-]*)/i",$uri, $match_array);
+  //preg_match("/(cwrc:[\w-]*)/i",$uri, $match_array);
+  preg_match("/([\w]+:[\w-]*)/i",$uri, $match_array);
   $pid = !empty($match_array[1]) ? $match_array[1] : FALSE;
   return $pid;
 }

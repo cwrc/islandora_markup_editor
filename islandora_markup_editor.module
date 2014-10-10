@@ -67,13 +67,15 @@ function islandora_markup_editor_menu() {
     'page callback' => 'islandora_markup_editor_oa_hasTarget_v2',
     'page arguments' => array(4),
     'type' => MENU_CALLBACK,
+    'type' => MENU_CALLBACK,
     'file' => 'includes/callbacks_oa.inc',
     'access arguments' => array(ISLANDORA_OPEN_ANNOTATION_VIEW),
   );
 
-  $items['islandora/markupeditor/oa/annotation_v2'] = array(
+  $items['islandora/markupeditor/oa/annotation_v2/%'] = array(
     'title' => 'Open Annotation Creation',
     'page callback' => 'islandora_markup_editor_oa_annotation_v2',
+    'page arguments' => array(4),
     'type' => MENU_CALLBACK,
     'file' => 'includes/callbacks_oa.inc',
     'access arguments' => array(ISLANDORA_OPEN_ANNOTATION_CREATE),
