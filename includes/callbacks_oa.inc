@@ -151,7 +151,7 @@ QUERY;
         array_push ($oa_array, "");
       }
       else {
-        array_push ($oa_array, $tmp);
+        array_push ($oa_array, array('pid'=>$item['id']['value'], 'oa'=>$tmp) );
       }
       unset($fedora_object);
       unset($tmp);
@@ -279,18 +279,18 @@ function islandora_markup_editor_oa_annotation_v2($uri = NULL) {
 */
 
 function islandora_markup_editor_oa_annotation_get_response(array $parameters) {
-  
+
   $fedora_object = $parameters['resource'];
 
-  if (!isset($fedora_object)) {
+  if (!isset($fedora_object) or !isset($fedora_object[ISLANDORA_MARKUP_EDITOR_OA_DATASTREAM])) {
     $tmp = $parameters['pid'];
+    drupal_add_http_header('Status', 404);
   }
   else {
     $tmp = $fedora_object[ISLANDORA_MARKUP_EDITOR_OA_DATASTREAM]->content;
   }
 
-  //drupal_add_http_header('Status', 405);
-  drupal_json_output($tmp);
+  return drupal_json_output($tmp);
 }
 
 
@@ -301,38 +301,26 @@ function islandora_markup_editor_oa_annotation_get_response(array $parameters) {
  *   An associative array containing relevent data for this request.
  *   - resource: The object to generate the response for.
  *   - request: The request parameters
- *     - label: The object's new label.
- *     - owner: The object's new owner.
- *     - state: The object's new state.
+ *     - annotation: The object's OA datastream contents.
  *
  * @return array
  *   The un-encoded response containing the following fields.
  *   - modified: The objects last modified date.
  */
 function islandora_markup_editor_oa_annotation_put_response(array $parameters) {
-  /*
-  $object = $parameters['resource'];
-  $request = $parameters['request'];
-  if (isset($request['label'])) {
-    $object->label = $request['label'];
-  }
-  if (isset($request['owner'])) {
-    $object->owner = $request['owner'];
-  }
-  if (isset($request['state'])) {
-    $object->state = $request['state'];
-  }
-  return array(
-    'pid' => $object->id,
-    'label' => $object->label,
-    'owner' => $object->owner,
-    'state' => $object->state,
-    'modified' => (string) $object->lastModifiedDate,
-  );
-   */
 
-  drupal_add_http_header('Status', 405);
-  drupal_json_output($parameters);
+  $fedora_object = $parameters['resource'];
+  $request = $parameters['request'];
+  $annotation_blob = $request['annotation'];
+
+  if (!isset($fedora_object) or !isset($fedora_object[ISLANDORA_MARKUP_EDITOR_OA_DATASTREAM])) {
+    drupal_add_http_header('Status', 404);
+  }
+  else {
+    $fedora_object[ISLANDORA_MARKUP_EDITOR_OA_DATASTREAM]->setContentFromString($annotation_blob);
+  }
+
+  return islandora_markup_editor_oa_annotation_get_response(array('resource' => $fedora_object));
 }
 
 
@@ -387,9 +375,18 @@ function islandora_markup_editor_oa_annotation_post_response(array $parameters) 
       , array()
     );
 
+  # add RELS-EXT relationships
   # ToDo: temporary 'targets', consider removing
-  $fedora_object->relationships->add(ISLANDORA_RELS_EXT_URI, 'targets', substr( $hasTarget, strrpos( $hasTarget, '/' )+1 ) );
-  $fedora_object->relationships->add('http://cwrc.ca/ns/relsext#', ISLANDORA_MARKUP_EDITOR_OA_HASTARGET, $hasTarget);
+  $fedora_object->relationships->add(
+    ISLANDORA_RELS_EXT_URI
+    , 'targets'
+    , substr( $hasTarget, strrpos( $hasTarget, '/' )+1 ) 
+  );
+  $fedora_object->relationships->add(
+    'http://cwrc.ca/ns/relsext#'
+    , ISLANDORA_MARKUP_EDITOR_OA_HASTARGET
+    , $hasTarget
+  );
 
   // create content datastream
   $oa_ds 
@@ -399,54 +396,13 @@ function islandora_markup_editor_oa_annotation_post_response(array $parameters) 
   $oa_ds->setContentFromString($annotation_xml);
   $fedora_object->ingestDatastream($oa_ds);
 
-
-
   islandora_add_object($fedora_object);
-
-
-
-/*
-  $tuque = islandora_get_tuque_connection();
-
-  // create Fedora Object
-  $fedora_object = $tuque->repository->constructObject($pid);
-
-  #$fedora_object->label = isset($request['label']) ? $request['label'] : $fedora_object->label;
-  #$fedora_object->owner = isset($request['owner']) ? $request['owner'] : $fedora_object->owner;
-
-  $tuque->repository->ingestObject($fedora_object);
-
-  // add datastream
-  if (!isset($fedora_object[ISLANDORA_MARKUP_EDITOR_OA_DATASTREAM])) {
-    $obj_ds = $fedora_object->constructDatastream(ISLANDORA_MARKUP_EDITOR_OA_DATASTREAM, 'M');
-    $new_ds->mimetype = 'text/xml';
-    $new_ds->content = $annotation_xml;
-    $fedora_object->ingestDatastream($obj_ds);
-  }
-  else {
-    $obj_ds = $fedora_object[ISLANDORA_MARKUP_EDITOR_OA_DATASTREAM];
-    $obj_ds->setContentFromString($annotation_xml);
-  }
-
-  // add RELS-EXT hasTarget
-  $fedora_object->relationships->add(ISLANDORA_RELS_EXT_URI, 'targets', $hasTarget);
-  $fedora_object->relationships->add('http://cwrc.ca/ns/relsext#', 'hasTarget', $hasTarget);
-  //is member of
-  $fedora_object->relationships->add(FEDORA_MODEL_URI, 'hasModel', $content_model);
-
-  islandora_add_object($fedora_object);
-*/
-
-
 
   drupal_add_http_header('Status', 201);
-
-
-
-  return drupal_json_output($parameters);
+  //return drupal_json_output($parameters);
 
   // Mock the Get Response.
-  //return islandora_markup_editor_oa_annotation_get_response(array('resource' => $fedora_object));
+  return islandora_markup_editor_oa_annotation_get_response(array('resource' => $fedora_object));
 }
 
 
@@ -463,11 +419,6 @@ function islandora_markup_editor_oa_annotation_delete_response(array $parameters
   $object = $parameters['resource'];
   $object->repository->purgeObject($object->id);
 }
-
-
-
-
-
 
 
 

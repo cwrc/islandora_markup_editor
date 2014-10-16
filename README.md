@@ -209,3 +209,109 @@ Accept: application/json
 ##### Content-Type: application/json
 Returns the same response as a [GET Annotation](#response-200-ok) request.
 
+
+
+## Update An Annotation
+
+#### URL syntax
+islandora/markupeditor/oa/annotation/{URI}
+
+#### HTTP Method
+PUT
+
+#### Headers
+Accept: application/json
+
+#### POST (form-data)
+| Name          | Description                                                  |
+| ------------- | ------------------------------------------------------------ |
+| annotation    | RDF XML serialiazation of the annotation 
+
+#### Response: 200 
+##### Content-Type: application/json
+Returns the same response as a [GET Annotation](#response-200-ok) request.
+
+
+
+
+## Get An Existing Annotation
+
+#### URL syntax
+islandora/markupeditor/oa/annotation/{URI}
+
+#### HTTP Method
+GET
+
+#### Headers
+Accept: application/json
+
+#### Request parameters
+none
+
+#### Response: 200
+##### Content-Type: application/json
+Returns the same response as a [GET Annotation](#response-200-ok) request.
+
+
+
+
+## Delete An Existing Annotation
+
+#### URL syntax
+islandora/markupeditor/oa/annotation/{URI}
+
+#### HTTP Method
+DELETE
+
+#### Headers
+Accept: application/json
+
+#### Request parameters
+none
+
+#### Response: 200
+##### Content-Type: application/json
+Returns the same response as a [GET Annotation](#response-200-ok) request.
+
+
+
+
+
+
+
+
+### Common Responses
+Unless otherwise specified each end-point can return the following responses.
+
+#### Response: 401 Unauthorized
+##### No response body.
+In general 401 means an anonymous user attempted some action and was denied.
+Either the action is not granted to anonymous uses in the Drupal permissions,
+or XACML denied the action for the anonymous user.
+
+#### Response: 403 Forbidden
+##### No response body.
+In general 403 means an authenticated user attempted some action and was denied.
+Either the authenticated user does not have a Drupal role that grants him/her
+permission to perform that action, or XACML denied the action for that user.
+
+#### Response: 404 Not Found
+##### No response body.
+In general a 404 will occur, when a user tries to perform an action on a
+object or datastream that doesn't not exist. Or XACML is hiding that
+object or datastream from the user.
+
+404 Responses can be returned even if the user was **not** determined to have
+permission to perform the requested action, as the resource must be first
+fetched from fedora before the users permission can be determined.
+
+#### Response: 500 Internal Server Error
+
+##### Content-Type: application/json
+| Name          | Description                                                  |
+| ------------- | ------------------------------------------------------------ |
+| message       | A detail description of the error.
+
+Any problem can trigger a 500 error, but in general you'll find that this is
+typically an error returned by Fedora.
+
