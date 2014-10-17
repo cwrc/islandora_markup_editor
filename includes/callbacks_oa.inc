@@ -380,12 +380,13 @@ function islandora_markup_editor_oa_annotation_post_response(array $parameters) 
   $fedora_object->relationships->add(
     ISLANDORA_RELS_EXT_URI
     , 'targets'
-    , substr( $hasTarget, strrpos( $hasTarget, '/' )+1 ) 
+    , substr( $hasTarget, strrpos( $hasTarget, '/' )+1) 
   );
   $fedora_object->relationships->add(
     'http://cwrc.ca/ns/relsext#'
     , ISLANDORA_MARKUP_EDITOR_OA_HASTARGET
     , $hasTarget
+    , RELS_TYPE_FULL_URI
   );
 
   // create content datastream

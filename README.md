@@ -151,7 +151,7 @@ Accept: application/json
         "start": "0",
         "rows": "5"
     },
-    "oa_items": [] []
+    "oa_items": [{},{},...]
 }
 ```
 
@@ -211,7 +211,7 @@ Returns the same response as a [GET Annotation](#response-200-ok) request.
 
 
 
-## Update An Annotation
+## Update An Existing Annotation
 
 #### URL syntax
 islandora/markupeditor/oa/annotation/{URI}
