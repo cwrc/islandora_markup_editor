@@ -10,6 +10,7 @@ define("ISLANDORA_MARKUP_EDITOR_OA_DATASTREAM",   "OA");
 define("ISLANDORA_MARKUP_EDITOR_OA_DATASTREAM_LABEL", "Open Annotation Serialization");
 define("ISLANDORA_MARKUP_EDITOR_OA_CMODEL",   "cwrc:openAnnotationCModel");
 define("ISLANDORA_MARKUP_EDITOR_OA_HASTARGET", "cwrc:hasTarget");
+define("ISLANDORA_MARKUP_EDITOR_OA_CWRC_NS", 'http://cwrc.ca/ns/relsext#');
 
 /**
  * Menu callback for the editor to persist OA Open Annotation data.
@@ -123,8 +124,18 @@ function islandora_markup_editor_oa_uri_mint($optional_UUID = null) {
  */
 function islandora_markup_editor_oa_hasTarget_v2($hasTarget_uri) {
 
+//    watchdog('islandora_markup_editor',
+//      var_export($parameters),
+//      array(
+//      ),
+//      WATCHDOG_ERROR
+//    );
+
+
   // given a hasTarget URI use RI to query list of object PIDS
   try {
+
+/*
     $query = <<<QUERY
       PREFIX io: <http://islandora.ca/ontology/relsext#>
       PREFIX fm: <info:fedora/fedora-system:def/model#>
@@ -135,6 +146,31 @@ function islandora_markup_editor_oa_hasTarget_v2($hasTarget_uri) {
         fm:state fm:Active ;
       }
 QUERY;
+ */
+
+    $ns = ISLANDORA_MARKUP_EDITOR_OA_CWRC_NS;
+
+
+    $query = <<<QUERY
+      PREFIX io: <$ns>
+      PREFIX fm: <info:fedora/fedora-system:def/model#>
+
+      SELECT ?id from <#ri>
+      WHERE {
+        ?id io:hasTarget <$hasTarget_uri> ;
+        fm:hasModel <info:fedora/cwrc:openAnnotationCModel>;
+        fm:state fm:Active ;
+      }
+QUERY;
+
+    watchdog('islandora_markup_editor',
+      $hasTarget_uri . $query,
+      array(
+      ),
+      WATCHDOG_ERROR
+    );
+
+
 
     $connection = islandora_get_tuque_connection();
     $query_results = $connection->repository->ri->sparqlQuery($query);
@@ -234,15 +270,6 @@ function islandora_markup_editor_oa_annotation_v2($uri = NULL) {
         'request' => islandora_rest_get_request_parameters(),
         'resource' => $resource,
       );
-
-
-//    watchdog('islandora_markup_editor',
-//      var_export($parameters),
-//      array(
-//      ),
-//      WATCHDOG_ERROR
-//    );
-
 
 
       // Can throw 400, 401, 500, etc.
@@ -353,19 +380,7 @@ function islandora_markup_editor_oa_annotation_post_response(array $parameters) 
   $uri = $request['uri'];
   $pid = islandora_markup_editor_oa_convert_uri_to_pid($uri);
 
-
-    watchdog('islandora_markup_editor post',
-      'pid @pid</br>',
-      array(
-        '@pid' => $pid,
-      ),
-      WATCHDOG_ERROR
-    );
-
-
-
-
-    // We need to prepare a new object.
+  // We need to prepare a new object.
   $fedora_object
     = islandora_prepare_new_object(
       $pid
@@ -383,7 +398,7 @@ function islandora_markup_editor_oa_annotation_post_response(array $parameters) 
     , substr( $hasTarget, strrpos( $hasTarget, '/' )+1) 
   );
   $fedora_object->relationships->add(
-    'http://cwrc.ca/ns/relsext#'
+    ISLANDORA_MARKUP_EDITOR_OA_CWRC_NS
     , ISLANDORA_MARKUP_EDITOR_OA_HASTARGET
     , $hasTarget
     , RELS_TYPE_FULL_URI
