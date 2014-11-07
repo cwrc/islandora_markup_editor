@@ -4,16 +4,36 @@
  * Handles the creation/display of islandora:markupEditorCModel objects.
  */
 
+global $base_url;
 
 define('ISLANDORA_OPEN_ANNOTATION_VIEW', 'view open annotations');
 define('ISLANDORA_OPEN_ANNOTATION_CREATE', 'create open annotations');
+
+define('ISLANDORA_OPEN_ANNOTATION_API_BASE', 'islandora/markupeditor/oa/');
+define('ISLANDORA_OPEN_ANNOTATION_API_HASTARGET', ISLANDORA_OPEN_ANNOTATION_API_BASE . 'hasTarget/');
+define('ISLANDORA_OPEN_ANNOTATION_API_MINTURI', ISLANDORA_OPEN_ANNOTATION_API_BASE . 'mintURI');
+define('ISLANDORA_OPEN_ANNOTATION_API', ISLANDORA_OPEN_ANNOTATION_API_BASE . 'annotation');
+
+define('ISLANDORA_MARKUPEDITOR_API_SETUP', 'islandora/markupeditor/setup/');
+define('ISLANDORA_MARKUPEDITOR_API_UPDATE', 'islandora/markupeditor/save_data/');
+define('ISLANDORA_MARKUPEDITOR_API_VIEW', 'islandora/object/%s/datastream/OBJ/view');
+
+define('ISLANDORA_CWRC_ENTITES_API', 'services/ccm-api');
+define('ISLANDORA_CWRC_ENTITES_API_PLACE', ISLANDORA_CWRC_ENTITES_API . '/place');
+define('ISLANDORA_CWRC_ENTITES_API_PLACE_SEARCH', ISLANDORA_CWRC_ENTITES_API_PLACE . '/search');
+define('ISLANDORA_CWRC_ENTITES_API_PERSON', ISLANDORA_CWRC_ENTITES_API . '/person');
+define('ISLANDORA_CWRC_ENTITES_API_PERSON_SEARCH', ISLANDORA_CWRC_ENTITES_API_PERSON. '/search');
+define('ISLANDORA_CWRC_ENTITES_API_ORGANIZATION', ISLANDORA_CWRC_ENTITES_API . '/organization');
+define('ISLANDORA_CWRC_ENTITES_API_ORGANIZATION_SEARCH', ISLANDORA_CWRC_ENTITES_API_ORGANIZATION . '/search');
+define('ISLANDORA_CWRC_ENTITES_API_TITLE', ISLANDORA_CWRC_ENTITES_API . '/title');
+define('ISLANDORA_CWRC_ENTITES_API_TITLE_SEARCH', ISLANDORA_CWRC_ENTITES_API_TITLE. '/search');
 
 
 /**
  * Implements hook_menu().
  */
 function islandora_markup_editor_menu() {
-  $items['islandora/markupeditor/setup/%islandora_object'] = array(
+  $items[ISLANDORA_MARKUPEDITOR_API_SETUP . '%islandora_object'] = array(
     'title' => 'Markup Editor Setup',
     'page callback' => 'islandora_markup_editor_setup',
     'page arguments' => array(3),
@@ -23,7 +43,7 @@ function islandora_markup_editor_menu() {
     'access arguments' => array(ISLANDORA_VIEW_OBJECTS, 3),
   );
 
-  $items['islandora/markupeditor/save_data/%islandora_object'] = array(
+  $items[ISLANDORA_MARKUPEDITOR_API_UPDATE . '%islandora_object'] = array(
     'title' => 'Save Data',
     'page callback' => 'islandora_markup_editor_savedata',
     'page arguments' => array(3),
@@ -33,7 +53,47 @@ function islandora_markup_editor_menu() {
     'access arguments' => array(ISLANDORA_CRITICAL_EDITION_EDIT_WITH_CWRC_WRITER, 3),
   );
 
-  $items['islandora/markupeditor/oa/hasTarget/%'] = array(
+
+  // depricated
+  // $items[ISLANDORA_OPEN_ANNOTATION_API_HASTARGET ."_old". '%'] = array(
+    // 'title' => 'Open Annotation hasTarget Query',
+    // 'page callback' => 'islandora_markup_editor_oa_hasTarget_old',
+    //'page arguments' => array(4),
+    //'type' => MENU_CALLBACK,
+    //'file' => 'includes/callbacks_oa.inc',
+    //'access arguments' => array(ISLANDORA_OPEN_ANNOTATION_VIEW),
+  //);
+  // depricated
+  //$items[ISLANDORA_OPEN_ANNOTATION_API."_old"] = array(
+    //'title' => 'Open Annotation Creation',
+    //'page callback' => 'islandora_markup_editor_oa_annotation_old',
+    //'page arguments' => array(4),
+    //'type' => MENU_CALLBACK,
+    //'file' => 'includes/callbacks_oa.inc',
+    //'access arguments' => array(ISLANDORA_OPEN_ANNOTATION_CREATE),
+  //);
+
+
+  //$items['islandora/markupeditor/oa/mintURI'] = array(
+  $items[ISLANDORA_OPEN_ANNOTATION_API_MINTURI] = array(
+    'title' => 'Open Annotation URI minting',
+    'page callback' => 'islandora_markup_editor_oa_mintURI',
+    'type' => MENU_CALLBACK,
+    'file' => 'includes/callbacks_oa.inc',
+    'access arguments' => array(ISLANDORA_OPEN_ANNOTATION_CREATE),
+  );
+
+
+  $items[ISLANDORA_OPEN_ANNOTATION_API_MINTURI . '/%'] = array(
+    'title' => 'Open Annotation URI minting',
+    'page callback' => 'islandora_markup_editor_oa_mintURI',
+    'page arguments' => array(4),
+    'type' => MENU_CALLBACK,
+    'file' => 'includes/callbacks_oa.inc',
+    'access arguments' => array(ISLANDORA_OPEN_ANNOTATION_CREATE),
+  );
+
+  $items[ISLANDORA_OPEN_ANNOTATION_API_HASTARGET . '%'] = array(
     'title' => 'Open Annotation hasTarget Query',
     'page callback' => 'islandora_markup_editor_oa_hasTarget',
     'page arguments' => array(4),
@@ -42,46 +102,16 @@ function islandora_markup_editor_menu() {
     'access arguments' => array(ISLANDORA_OPEN_ANNOTATION_VIEW),
   );
 
-  $items['islandora/markupeditor/oa/mintURI'] = array(
-    'title' => 'Open Annotation URI minting',
-    'page callback' => 'islandora_markup_editor_oa_uri_mint',
-    'page arguments' => array(4),
-    'type' => MENU_CALLBACK,
-    'file' => 'includes/callbacks_oa.inc',
-    'access arguments' => array(ISLANDORA_OPEN_ANNOTATION_CREATE),
-  );
-
-  $items['islandora/markupeditor/oa/annotation'] = array(
+  $items[ISLANDORA_OPEN_ANNOTATION_API] = array(
     'title' => 'Open Annotation Creation',
     'page callback' => 'islandora_markup_editor_oa_annotation',
-    'page arguments' => array(4),
     'type' => MENU_CALLBACK,
     'file' => 'includes/callbacks_oa.inc',
     'access arguments' => array(ISLANDORA_OPEN_ANNOTATION_CREATE),
   );
-
-
-
-  $items['islandora/markupeditor/oa/hasTarget_v2/%'] = array(
-    'title' => 'Open Annotation hasTarget Query',
-    'page callback' => 'islandora_markup_editor_oa_hasTarget_v2',
-    'page arguments' => array(4),
-    'type' => MENU_CALLBACK,
-    'type' => MENU_CALLBACK,
-    'file' => 'includes/callbacks_oa.inc',
-    'access arguments' => array(ISLANDORA_OPEN_ANNOTATION_VIEW),
-  );
-
-  $items['islandora/markupeditor/oa/annotation_v2'] = array(
+  $items[ISLANDORA_OPEN_ANNOTATION_API . '%'] = array(
     'title' => 'Open Annotation Creation',
-    'page callback' => 'islandora_markup_editor_oa_annotation_v2',
-    'type' => MENU_CALLBACK,
-    'file' => 'includes/callbacks_oa.inc',
-    'access arguments' => array(ISLANDORA_OPEN_ANNOTATION_CREATE),
-  );
-  $items['islandora/markupeditor/oa/annotation_v2/%'] = array(
-    'title' => 'Open Annotation Creation',
-    'page callback' => 'islandora_markup_editor_oa_annotation_v2',
+    'page callback' => 'islandora_markup_editor_oa_annotation',
     'page arguments' => array(4),
     'type' => MENU_CALLBACK,
     'file' => 'includes/callbacks_oa.inc',

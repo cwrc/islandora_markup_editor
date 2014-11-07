@@ -10,6 +10,7 @@
  * @param AbstractObject $fedora_object
  *   The fedora object
  */
+
 function islandora_markup_editor_savedata(AbstractObject $fedora_object) {
   module_load_include('inc', 'islandora_markup_editor', 'includes/utilities');
   try {
@@ -80,5 +81,216 @@ function islandora_markup_editor_setup(AbstractObject $fedora_object) {
   $person_entity_collection = variable_get('islandora_entities_people_collection', 'islandora:entity_collection');
   $results['create_entity_callbacks']['people'] = url('islandora/object/' . $person_entity_collection . '/manage/overview/ingest');
 
+  $results['annotations'] = islandora_markup_editor_setup_annotations();
+  $results['entities'] = islandora_markup_editor_setup_entities($fedora_object);
+  $results['resource'] = islandora_markup_editor_setup_resource($fedora_object);
+
   drupal_json_output($results);
 }
+
+
+/**
+ * support for the callback to provide setup info for the cwrc-writer/viewer.
+ * annotation urls
+ *
+ */
+function islandora_markup_editor_setup_annotations() 
+{
+
+  // global Drupal variables 
+  global $base_url;
+
+  $p = $base_url.'/';
+
+  return $tmp = array (
+    "cwrc:handleAnnotations" => $p . ISLANDORA_OPEN_ANNOTATION_API
+    );
+}
+
+
+
+function islandora_markup_editor_setup_entities_helper(
+  $hasLookupBase = NULL
+  , $hasUpdatePoint = NULL
+  , $hasContent = NULL
+  ) 
+
+{
+  $tmp = array();
+
+  if ($hasLookupBase != null)
+  {
+    $tmp["cwrc:hasLookupBase"] = $hasLookupBase;
+  }
+  if ($hasUpdatePoint != null)
+  {
+    $tmp["cwrc:hasUpdatePoint"] = $hasUpdatePoint;
+  }
+  if ($hasContent != null)
+  {
+    $tmp["cwrc:hasContent"] = $hasContent;
+  }
+
+  if (empty($tmp))
+  {
+    $tmp = null;
+  }
+
+  return $tmp;
+}
+
+/**
+ * support for the callback to provide setup info for the cwrc-writer/viewer.
+ * entities
+ *
+ * @param AbstractObject $fedora_object
+ *   Fedora object to provide setup for.
+ */
+function islandora_markup_editor_setup_entities(AbstractObject $fedora_object) 
+{
+
+  // global Drupal variables 
+  global $base_url;
+
+  $pid = $fedora_object->id;
+  $p = $base_url.'/';
+
+
+  // build JSON structure for Orlando Entities
+  $person 
+    = islandora_markup_editor_setup_entities_helper(
+      $p . ISLANDORA_CWRC_ENTITES_API_PERSON_SEARCH 
+      , $p . ISLANDORA_CWRC_ENTITES_API_PERSON
+      , $p . ISLANDORA_CWRC_ENTITES_API_PERSON
+      );
+
+  $organization 
+    = islandora_markup_editor_setup_entities_helper(
+      $p . ISLANDORA_CWRC_ENTITES_API_ORGANIZATION_SEARCH 
+      , $p . ISLANDORA_CWRC_ENTITES_API_ORGANIZATION
+      , $p . ISLANDORA_CWRC_ENTITES_API_ORGANIZATION
+      );
+
+  $place 
+    = islandora_markup_editor_setup_entities_helper(
+      $p . ISLANDORA_CWRC_ENTITES_API_PLACE_SEARCH 
+      , $p . ISLANDORA_CWRC_ENTITES_API_PLACE
+      , $p . ISLANDORA_CWRC_ENTITES_API_PLACE
+      );
+
+  $title 
+    = islandora_markup_editor_setup_entities_helper(
+      $p . ISLANDORA_CWRC_ENTITES_API_TITLE_SEARCH 
+      , $p . ISLANDORA_CWRC_ENTITES_API_TITLE
+      , $p . ISLANDORA_CWRC_ENTITES_API_TITLE
+      );
+
+  // build JSON structure for default / CWRC Entities
+
+  $default = array(
+    "person" => $person
+    , "organization" => $organization
+    , "place" => $place
+    , "title" => $title
+    );
+
+
+  // build JSON structure for default / CWRC Entities
+  // same as CWRC for now - 2014-11-07
+  $orlando = array(
+    "person" => $person
+    , "organization" => $organization
+    , "place" => $place
+    , "title" => $title
+  );
+
+
+  // build JSON structure for international authority for Entities
+  $person = $organization = $place = $title = null;
+  $person 
+    = islandora_markup_editor_setup_entities_helper(
+      $p . "services/viaf/search?query=local.personalNames"
+      , null
+      , null
+      );
+
+  $organization 
+    = islandora_markup_editor_setup_entities_helper(
+      $p . "services/viaf/search?query=local.corporateNames"
+      , null
+      , null
+      );
+
+  $place 
+    = islandora_markup_editor_setup_entities_helper(
+      $p . 'cwrc-mtp/geonames/?query='
+      , null
+      , null
+      );
+
+  $title 
+    = islandora_markup_editor_setup_entities_helper(
+      $p . "services/viaf/search?query=local.uniformTitleWorks"
+      , null
+      , null
+      );
+
+  $international_authority = array(
+    "person" => $person
+    , "organization" => $organization
+    , "place" => $place
+    , "title" => $title
+    );
+
+
+
+  // build JSON structure for special entities lookups 
+  $person = $organization = $place = $title = null;
+  $place 
+    = islandora_markup_editor_setup_entities_helper(
+      "http://maps.googleapis.com/maps/api/geocode/xml?address="
+      , null
+      , null
+      );
+
+  $special = array(
+    "place" => $place
+    );
+
+
+
+  // final build
+  return $tmp = array (
+    "default" => $default
+    , "orlando" => $orlando
+    , "international_authority" => $international_authority
+    , "special" => $special
+    );
+}
+
+/**
+ * support for the callback to provide setup info for the cwrc-writer/viewer.
+ * 
+ *
+ * @param AbstractObject $fedora_object
+ *   Fedora object to provide setup for.
+ */
+function islandora_markup_editor_setup_resource(AbstractObject $fedora_object) 
+{
+  // global Drupal variables 
+  global $base_url;
+
+  $pid = $fedora_object->id;
+  $p = $base_url.'/';
+
+  return array (
+    "cwrc:hasAnnotation" => $p . ISLANDORA_OPEN_ANNOTATION_API_HASTARGET . $pid
+    , "cwrc:hasDocUpdatePoint" => $p . ISLANDORA_MARKUPEDITOR_API_UPDATE . $pid
+    , "cwrc:hasCopiesOfText" => $p . sprintf(ISLANDORA_MARKUPEDITOR_API_VIEW, $pid)
+    , "cwrc:hasID" => $pid 
+    );
+}
+
+
+
+
