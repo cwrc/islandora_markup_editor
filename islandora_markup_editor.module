@@ -9,6 +9,10 @@ global $base_url;
 define('ISLANDORA_OPEN_ANNOTATION_VIEW', 'view open annotations');
 define('ISLANDORA_OPEN_ANNOTATION_CREATE', 'create open annotations');
 
+define('ISLANDORA_CWRC_ENTITY_VIEW', 'view entity');
+define('ISLANDORA_CWRC_ENTITY_CREATE', 'create entity');
+
+
 define('ISLANDORA_OPEN_ANNOTATION_API_BASE', 'islandora/markupeditor/oa/');
 define('ISLANDORA_OPEN_ANNOTATION_API_HASTARGET', ISLANDORA_OPEN_ANNOTATION_API_BASE . 'hasTarget/');
 define('ISLANDORA_OPEN_ANNOTATION_API_MINTURI', ISLANDORA_OPEN_ANNOTATION_API_BASE . 'mintURI');
@@ -119,6 +123,26 @@ function islandora_markup_editor_menu() {
   );
 
 
+  // ===== ENTITIES
+  
+  
+ 
+  // search
+  //$items[ISLANDORA_CWRC_ENTITES_API_PERSON_SEARCH] = array(
+  //
+  $items['islandora/z'] = array(
+    'title' => 'Person Entity Search',
+    'page callback' => 'islandora_markup_editor_entity_search',
+    'page arguments' => array(
+      'info:fedora/cwrc:person-entityCModel'
+      , array('cwrc_entity_person_preferredForm_et','cwrc_entity_person_variantForm_et')
+      ),
+    'type' => MENU_CALLBACK,
+    'file' => 'includes/callbacks_entities.inc',
+    'access arguments' => array(ISLANDORA_CWRC_ENTITY_VIEW),
+  );
+
+
 
 
 
@@ -138,6 +162,14 @@ function islandora_markup_editor_permission() {
     ISLANDORA_OPEN_ANNOTATION_CREATE => array(
       'title' => t('Create open annotations'),
       'description' => t('Create open Annotations'),
+    ),
+    ISLANDORA_CWRC_ENTITY_VIEW => array(
+      'title' => t('View entity'),
+      'description' => t('View entity'),
+    ),
+    ISLANDORA_CWRC_ENTITY_CREATE => array(
+      'title' => t('Create entity'),
+      'description' => t('Create entity'),
     ),
   );
 }
