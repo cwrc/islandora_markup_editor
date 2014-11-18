@@ -33,6 +33,10 @@ define('ISLANDORA_CWRC_ENTITES_API_TITLE', ISLANDORA_CWRC_ENTITES_API . '/title'
 define('ISLANDORA_CWRC_ENTITES_API_TITLE_SEARCH', ISLANDORA_CWRC_ENTITES_API_TITLE. '/search');
 
 
+define('ISLANDORA_CWRC_ENTITES_PERSON_DS_ID', 'PERSON');
+
+define('ISLANDORA_CWRC_ENTITES_REQUEST_CONTENT_PARAM', 'data');
+
 /**
  * Implements hook_menu().
  */
@@ -140,6 +144,54 @@ function islandora_markup_editor_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'includes/callbacks_entities.inc',
     'access arguments' => array(ISLANDORA_CWRC_ENTITY_VIEW),
+  );
+
+
+  module_load_include('inc', 'islandora_workflow_rest', 'includes/basic_enum');      
+
+  // PERSON Entity
+  //$items[ISLANDORA_CWRC_ENTITES_API_PERSON] = array(
+  $items['islandora/z/person'] = array(
+    'title' => 'Person Entity REST Creation',
+    'type' => MENU_CALLBACK,
+    'file' => 'includes/callbacks_entities.inc',
+    'access arguments' => array(ISLANDORA_CWRC_ENTITY_CREATE),
+    'page callback' => 'islandora_markup_editor_entities',
+    'page arguments' => array(
+      NULL 
+      , 'info:fedora/cwrc:person-entityCModel'
+      , 'cwrc:d3c004f1-2b3f-4e51-a679-4f1c0da4fe17'
+      , array(
+          WorkflowConst::STAMP => 'cwrc:cre'
+          , WorkflowConst::CATEGORY => 'created'
+          , WorkflowConst::STATUS => 'c'
+        )
+      , '/xml/entity_to_dc.xsl'
+      , ISLANDORA_CWRC_ENTITES_PERSON_DS_ID
+      ),
+    'type' => MENU_CALLBACK,
+  );
+
+
+  //$items[ISLANDORA_CWRC_ENTITES_API_PERSON . '%'] = array(
+  $items['islandora/z/person/%'] = array(
+    'title' => 'Person Entity REST endpoint',
+    'type' => MENU_CALLBACK,
+    'file' => 'includes/callbacks_entities.inc',
+    'access arguments' => array(ISLANDORA_CWRC_ENTITY_CREATE),
+    'page callback' => 'islandora_markup_editor_entities',
+    'page arguments' => array(
+      3 
+      , NULL
+      , NULL
+      , array(
+          WorkflowConst::STAMP => 'cwrc:evr'
+          , WorkflowConst::CATEGORY => 'content_contribution'
+          , WorkflowConst::STATUS => 'c'
+        )
+      , '/xml/entity_to_dc.xsl'
+      , ISLANDORA_CWRC_ENTITES_PERSON_DS_ID
+      ),
   );
 
 
