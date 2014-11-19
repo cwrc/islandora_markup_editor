@@ -553,8 +553,8 @@ function islandora_markup_editor_entity_search($cModel, $solr_field_array)
     module_load_include('inc', 'islandora_rest', "includes/utilities");
 
     $tmp = islandora_rest_get_request_parameters();
-    $limit  = $tmp['limit'];
-    $page   = $tmp['page'];
+    $limit  = ((isset($tmp['limit'])) ? $tmp['limit'] : NULL);
+    $page   = ((isset($tmp['page'])) ? $tmp['page'] : NULL);
     $queryTerms  = $tmp['query'];
 
     // not sure if needed - 2014-11-5 - copied directly from ccm-rest-api entity.php
@@ -573,14 +573,16 @@ function islandora_markup_editor_entity_search($cModel, $solr_field_array)
         $queryStr = $queryStr . "%20OR%20";
       }
       $queryStr .= $item . ":" . "(" . $queryTerms .")";
+      $iter++;
     }
     $queryStr .= ")";
 
     $request = array(
-      'wt' => 'json'
-      , 'limit' => $limit 
-      , 'page'  => $page
-      , 'f[]' => "RELS_EXT_hasModel_uri_ms:" . str_replace(array("%3A"), "%5C:", urlencode($cModel))
+        'wt' => 'json'
+        , 'limit' => $limit
+        , 'page' => $page
+        //, 'f' => array("RELS_EXT_hasModel_uri_ms:".str_replace(':','\:',$cModel))
+        , 'f' => array("RELS_EXT_hasModel_uri_ms:".islandora_solr_lesser_escape($cModel))
       );
 
     $solr = new IslandoraSolrQueryProcessor();
