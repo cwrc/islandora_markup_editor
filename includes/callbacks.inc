@@ -103,7 +103,7 @@ function islandora_markup_editor_setup_annotations()
   $p = $base_url.'/';
 
   return $tmp = array (
-    "cwrc:handleAnnotations" => $p . ISLANDORA_OPEN_ANNOTATION_API
+    "cwrc:handleAnnotations" => $p . CWRC_OPEN_ANNOTATION_API
     );
 }
 
@@ -149,6 +149,8 @@ function islandora_markup_editor_setup_entities_helper(
 function islandora_markup_editor_setup_entities(AbstractObject $fedora_object) 
 {
 
+  module_load_include('inc', 'cwrc_entities', 'cwrc_entities.module');
+
   // global Drupal variables 
   global $base_url;
 
@@ -159,30 +161,30 @@ function islandora_markup_editor_setup_entities(AbstractObject $fedora_object)
   // build JSON structure for Orlando Entities
   $person 
     = islandora_markup_editor_setup_entities_helper(
-      $p . ISLANDORA_CWRC_ENTITES_API_PERSON_SEARCH 
-      , $p . ISLANDORA_CWRC_ENTITES_API_PERSON
-      , $p . ISLANDORA_CWRC_ENTITES_API_PERSON
+      $p . CWRC_ENTITES_API_PERSON_SEARCH 
+      , $p . CWRC_ENTITES_API_PERSON
+      , $p . CWRC_ENTITES_API_PERSON
       );
 
   $organization 
     = islandora_markup_editor_setup_entities_helper(
-      $p . ISLANDORA_CWRC_ENTITES_API_ORGANIZATION_SEARCH 
-      , $p . ISLANDORA_CWRC_ENTITES_API_ORGANIZATION
-      , $p . ISLANDORA_CWRC_ENTITES_API_ORGANIZATION
+      $p . CWRC_ENTITES_API_ORGANIZATION_SEARCH 
+      , $p . CWRC_ENTITES_API_ORGANIZATION
+      , $p . CWRC_ENTITES_API_ORGANIZATION
       );
 
   $place 
     = islandora_markup_editor_setup_entities_helper(
-      $p . ISLANDORA_CWRC_ENTITES_API_PLACE_SEARCH 
-      , $p . ISLANDORA_CWRC_ENTITES_API_PLACE
-      , $p . ISLANDORA_CWRC_ENTITES_API_PLACE
+      $p . CWRC_ENTITES_API_PLACE_SEARCH 
+      , $p . CWRC_ENTITES_API_PLACE
+      , $p . CWRC_ENTITES_API_PLACE
       );
 
   $title 
     = islandora_markup_editor_setup_entities_helper(
-      $p . ISLANDORA_CWRC_ENTITES_API_TITLE_SEARCH 
-      , $p . ISLANDORA_CWRC_ENTITES_API_TITLE
-      , $p . ISLANDORA_CWRC_ENTITES_API_TITLE
+      $p . CWRC_ENTITES_API_TITLE_SEARCH 
+      , $p . CWRC_ENTITES_API_TITLE
+      , $p . CWRC_ENTITES_API_TITLE
       );
 
   // build JSON structure for default / CWRC Entities
@@ -284,7 +286,7 @@ function islandora_markup_editor_setup_resource(AbstractObject $fedora_object)
   $p = $base_url.'/';
 
   return array (
-    "cwrc:hasAnnotation" => $p . ISLANDORA_OPEN_ANNOTATION_API_HASTARGET . $pid
+    "cwrc:hasAnnotation" => $p . CWRC_OPEN_ANNOTATION_API_HASTARGET . $pid
     , "cwrc:hasDocUpdatePoint" => $p . ISLANDORA_MARKUPEDITOR_API_UPDATE . $pid
     , "cwrc:hasCopiesOfText" => $p . sprintf(ISLANDORA_MARKUPEDITOR_API_VIEW, $pid)
     , "cwrc:hasID" => $pid 
