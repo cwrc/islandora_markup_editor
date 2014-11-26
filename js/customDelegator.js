@@ -244,8 +244,8 @@ var CustomDelegator = function(writer) {
 	 * TODO Move currentDocId system out of CWRCWriter
 	 * @param docName
 	 */
-	del.loadDocument = function(callback) {
-		$.ajax({
+	del.loadDocument = function(docId, callback) {
+		jQuery.ajax({
 			url: Drupal.settings.basePath + 'islandora/object/' + PID + '/datastream/' + dsid + '/view',//w.baseUrl+'editor/documents/'+w.currentDocId,
 			type: 'GET',
 			success: function(doc, status, xhr) {

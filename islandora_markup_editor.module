@@ -132,26 +132,31 @@ function islandora_markup_editor_theme($existing, $type, $theme, $path) {
  */
 function islandora_markup_editor_library() {
   $module_path = drupal_get_path('module', 'islandora_markup_editor');
+  $library_path = libraries_get_path('CWRC-Writer') . "/../";
+  //$module_path = $library_path. "/../";
+
   $items = array();
   $items['cwrcwriter'] = array(
     'title' => t('CWRC-Writer Library'),
     'version' => '1.0',
     'js' => array(
-      "$module_path/CWRC-Writer/src/js/config.js" => array(),
-      "$module_path/CWRC-Writer/src/js/lib/require/require.js" => array(),
-      "$module_path/CWRC-Writer/src/js/layout.js" => array(),
+      //"$library_path/CWRC-Writer/src/js/lib/require/require.js" => array('#attributes' => array( 'data-main' => "$library_path/CWRC-Writer/src/js/config.js") ),
+      "$library_path/CWRC-Writer/src/js/lib/require/require.js" => array(),
+      "$module_path/js/requirejs_config.js" => array(),
+      "$library_path/CWRC-Writer/src/js/config.js" => array(),
+      "$library_path/CWRC-Writer/src/js/layout.js" => array(),
     ),
     'css' => array(
-      "$module_path/CWRC-Writer/src/css/editor.css" => array(),
-      "$module_path/CWRC-Writer/src/css/style.css" => array(),
-      "$module_path/CWRC-Writer/src/css/islandora_style.css" => array(),
-      "$module_path/CWRC-Writer/src/css/layout-default-latest.css" => array(),
-      "$module_path/CWRC-Writer/src/js/lib/jstree/themes/cwrc/style.css" => array(),
-      "$module_path/CWRC-Writer/src/js/lib/snippet/jquery.snippet.css" => array(),
-      "$module_path/CWRC-Writer/src/smoothness/jquery-ui-1.10.4.custom.css" => array(),
-      "$module_path/CWRC-Writer/src/js/lib/bootstrap/bootstrap.css" => array(),
-      "$module_path/CWRC-Writer/src/js/cwrcDialogs/css/datepicker.css" => array(),
-      "$module_path/CWRC-Writer/src/js/cwrcDialogs/css/cD.css" => array(),
+      "$library_path/CWRC-Writer/src/css/editor.css" => array(),
+      "$library_path/CWRC-Writer/src/css/style.css" => array(),
+      "$library_path/CWRC-Writer/src/css/islandora_style.css" => array(),
+      "$library_path/CWRC-Writer/src/css/layout-default-latest.css" => array(),
+      "$library_path/CWRC-Writer/src/js/lib/jstree/themes/cwrc/style.css" => array(),
+      "$library_path/CWRC-Writer/src/js/lib/snippet/jquery.snippet.css" => array(),
+      "$library_path/CWRC-Writer/src/smoothness/jquery-ui-1.10.4.custom.css" => array(),
+      "$library_path/CWRC-Writer/src/js/lib/bootstrap/bootstrap.css" => array(),
+      "$library_path/CWRC-Writer/src/js/cwrcDialogs/css/datepicker.css" => array(),
+      "$library_path/CWRC-Writer/src/js/cwrcDialogs/css/cD.css" => array(),
     ),
   );
   return $items;
