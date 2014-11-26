@@ -345,31 +345,31 @@ function islandora_markup_editor_setup_cwrc_writer_helper()
         "tei" => array(
             "name" => "CWRC Basic TEI Schema",
             "url" => "http://cwrc.ca/schemas/cwrc_tei_lite.rng",
-            "cssUrl" => $CWRC_Writer_path . "src/css/tei_converted.css",
+            "cssUrl" => $CWRC_Writer_path . "/src/css/tei_converted.css",
             "schemaMappingsId" => "tei"
         ),
         "events" => array(
             "name" => "Events Schema",
             "url" => "http://cwrc.ca/schemas/orlando_events.rng",
-            "cssUrl" => $CWRC_Writer_path . "src/css/orlando_converted.css",
+            "cssUrl" => $CWRC_Writer_path . "/src/css/orlando_converted.css",
             "schemaMappingsId" => "orlando"
         ),
         "biography" => array(
             "name" => "Biography Schema",
             "url" => "http://cwrc.ca/schemas/orlando_biography.rng",
-            "cssUrl" => $CWRC_Writer_path . "src/css/orlando_converted.css",
+            "cssUrl" => $CWRC_Writer_path . "/src/css/orlando_converted.css",
             "schemaMappingsId" => "orlando"
         ),
         "writing" => array(
             "name" => "Writing Schema",
             "url" => "http://cwrc.ca/schemas/orlando_writing.rng",
-            "cssUrl" => $CWRC_Writer_path . "src/css/orlando_converted.css",
+            "cssUrl" => $CWRC_Writer_path . "/src/css/orlando_converted.css",
             "schemaMappingsId" => "orlando"
         ),
         "cwrcEntry" => array(
             "name" => "CWRC Entry Schema",
             "url" => "http://cwrc.ca/schemas/cwrc_entry.rng",
-            "cssUrl" => $CWRC_Writer_path . "src/css/cwrc_converted.css",
+            "cssUrl" => $CWRC_Writer_path . "/src/css/cwrc_converted.css",
             "schemaMappingsId" => "cwrcEntry"
         )
   );
