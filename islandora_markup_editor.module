@@ -4,11 +4,18 @@
  * Handles the creation/display of islandora:markupEditorCModel objects.
  */
 
+global $base_url;
+
+define('ISLANDORA_MARKUPEDITOR_API_SETUP', 'islandora/markupeditor/setup/');
+define('ISLANDORA_MARKUPEDITOR_API_UPDATE', 'islandora/markupeditor/save_data/');
+define('ISLANDORA_MARKUPEDITOR_API_VIEW', 'islandora/object/%s/datastream/OBJ/view');
+
+
 /**
  * Implements hook_menu().
  */
 function islandora_markup_editor_menu() {
-  $items['islandora/markupeditor/setup/%islandora_object'] = array(
+  $items[ISLANDORA_MARKUPEDITOR_API_SETUP . '%islandora_object'] = array(
     'title' => 'Markup Editor Setup',
     'page callback' => 'islandora_markup_editor_setup',
     'page arguments' => array(3),
@@ -17,7 +24,7 @@ function islandora_markup_editor_menu() {
     'access callback' => 'islandora_object_access_callback',
     'access arguments' => array(ISLANDORA_VIEW_OBJECTS, 3),
   );
-  $items['islandora/markupeditor/save_data/%islandora_object'] = array(
+  $items[ISLANDORA_MARKUPEDITOR_API_UPDATE . '%islandora_object'] = array(
     'title' => 'Save Data',
     'page callback' => 'islandora_markup_editor_savedata',
     'page arguments' => array(3),
@@ -180,25 +187,29 @@ function islandora_markup_editor_theme($existing, $type, $theme, $path) {
  */
 function islandora_markup_editor_library() {
   $module_path = drupal_get_path('module', 'islandora_markup_editor');
+  $library_CWRC_Writer_path = libraries_get_path('CWRC-Writer');
+
   $items = array();
   $items['cwrcwriter'] = array(
     'title' => t('CWRC-Writer Library'),
     'version' => '1.0',
     'js' => array(
-      "$module_path/CWRC-Writer/src/js/config.js" => array(),
-      "$module_path/CWRC-Writer/src/js/lib/require/require.js" => array(),
-      "$module_path/CWRC-Writer/src/js/layout.js" => array(),
+      //"$library_path/CWRC-Writer/src/js/lib/require/require.js" => array('#attributes' => array( 'data-main' => "$library_path/CWRC-Writer/src/js/config.js") ),
+      "$library_CWRC_Writer_path/src/js/lib/require/require.js" => array(),
+      "$module_path/js/requirejs_config.js" => array(),
+      "$library_CWRC_Writer_path/src/js/config.js" => array(),
+      "$library_CWRC_Writer_path/src/js/layout.js" => array(),
     ),
     'css' => array(
-      "$module_path/CWRC-Writer/src/css/editor.css" => array(),
-      "$module_path/CWRC-Writer/src/css/style.css" => array(),
-      "$module_path/CWRC-Writer/src/css/islandora_style.css" => array(),
-      "$module_path/CWRC-Writer/src/css/layout-default-latest.css" => array(),
-      "$module_path/CWRC-Writer/src/js/lib/snippet/jquery.snippet.css" => array(),
-      "$module_path/CWRC-Writer/src/smoothness/jquery-ui-1.10.4.custom.css" => array(),
-      "$module_path/CWRC-Writer/src/js/lib/bootstrap/bootstrap.css" => array(),
-      "$module_path/CWRC-Writer/src/js/cwrcDialogs/css/datepicker.css" => array(),
-      "$module_path/CWRC-Writer/src/js/cwrcDialogs/css/cD.css" => array(),
+      "$library_CWRC_Writer_path/src/css/editor.css" => array(),
+      "$library_CWRC_Writer_path/src/css/style.css" => array(),
+      "$library_CWRC_Writer_path/src/css/islandora_style.css" => array(),
+      "$library_CWRC_Writer_path/src/css/layout-default-latest.css" => array(),
+      "$library_CWRC_Writer_path/src/js/lib/snippet/jquery.snippet.css" => array(),
+      "$library_CWRC_Writer_path/src/smoothness/jquery-ui-1.10.4.custom.css" => array(),
+      "$library_CWRC_Writer_path/src/js/lib/bootstrap/bootstrap.css" => array(),
+      "$library_CWRC_Writer_path/src/js/cwrcDialogs/css/datepicker.css" => array(),
+      "$library_CWRC_Writer_path/src/js/cwrcDialogs/css/cD.css" => array(),
     ),
   );
   return $items;
