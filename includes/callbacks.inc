@@ -81,7 +81,7 @@ function islandora_markup_editor_setup(AbstractObject $fedora_object) {
   $person_entity_collection = variable_get('islandora_entities_people_collection', 'islandora:entity_collection');
   $results['create_entity_callbacks']['people'] = url('islandora/object/' . $person_entity_collection . '/manage/overview/ingest');
 
-  if (module_exists('cwrc_entities')
+  if (module_exists('cwrc_entities'))
   {
     $results['annotations'] = islandora_markup_editor_setup_annotations();
     $results['entities'] = islandora_markup_editor_setup_entities($fedora_object);
@@ -311,6 +311,7 @@ function islandora_markup_editor_setup_resource(AbstractObject $fedora_object)
  * TODO: setup URLs so that they are not hardcoded
  */
 function islandora_markup_editor_setup_entity_dialogs_helper()
+{
   $tmp = null;
 
   $tmp = array(
