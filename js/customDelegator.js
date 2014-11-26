@@ -242,9 +242,10 @@ var CustomDelegator = function(writer) {
 	/**
 	 * Loads a document based on the currentDocId
 	 * TODO Move currentDocId system out of CWRCWriter
+     * TODO Move url into the conf parameters for a given resource
 	 * @param docName
 	 */
-	del.loadDocument = function(callback) {
+	del.loadDocument = function(docId, callback) {
 		$.ajax({
 			url: Drupal.settings.basePath + 'islandora/object/' + PID + '/datastream/' + dsid + '/view',//w.baseUrl+'editor/documents/'+w.currentDocId,
 			type: 'GET',
@@ -272,7 +273,7 @@ var CustomDelegator = function(writer) {
 	 * Performs the server call to save the document.
 	 * @param callback Called with one boolean parameter: true for successful save, false otherwise
 	 */
-	del.saveDocument = function(callback) {
+	del.saveDocument = function(docId, callback) {
 		if (!Drupal.settings.islandora_markup_editor.can_edit) {
 		      writer.dialogs.show('message', {
 		        title: 'Please Authenticate',
