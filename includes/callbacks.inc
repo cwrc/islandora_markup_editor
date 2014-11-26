@@ -337,9 +337,11 @@ function islandora_markup_editor_setup_entity_dialogs_helper()
 function islandora_markup_editor_setup_cwrc_writer_helper()
 {
 
+  global $base_url;
+
   $tmp = null;
 
-  $CWRC_Writer_path = $base_url + libraries_get_path('CWRC-Writer');
+  $CWRC_Writer_path = $base_url . libraries_get_path('CWRC-Writer');
 
   $tmp = array(
         "tei" => array(
