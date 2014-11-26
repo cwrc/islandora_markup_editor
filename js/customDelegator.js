@@ -246,7 +246,7 @@ var CustomDelegator = function(writer) {
 	 * @param docName
 	 */
 	del.loadDocument = function(docId, callback) {
-		ajax.ajax({
+		jQuery.ajax({
 			url: Drupal.settings.basePath + 'islandora/object/' + PID + '/datastream/' + dsid + '/view',//w.baseUrl+'editor/documents/'+w.currentDocId,
 			type: 'GET',
 			success: function(doc, status, xhr) {
