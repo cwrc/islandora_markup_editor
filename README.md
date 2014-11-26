@@ -15,13 +15,12 @@ Allows for the creation of born digital markup content, made to be viewed and ed
 This module requires the following modules/libraries:
 
 * [Islandora](https://github.com/islandora/islandora)
-* [Islandora Paged Content](https://github.com/Islandora/islandora_paged_content)
-* [Islandora Critical Edition](https://github.com/discoverygarden/islandora_critical_edition)
+* [Islandora Image Annotation](https://github.com/Islandora/islandora_image_annotation)
 
 ## Installation
 
 Install as usual, see [this](https://drupal.org/documentation/install/modules-themes/modules-7) for further information.
-Ensure islandora_critical_edition is installed and configured, as well as its validation.war (validation) service is deployed.
+Ensure islandora_markup_editor is installed and configured, as well as its validation.war (validation) service is deployed.
 
 ## Troubleshooting/Issues
 

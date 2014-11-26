@@ -84,7 +84,7 @@ function islandora_markup_editor_schema_upload_form_submit(array $form, array &$
   $rng_path = drupal_realpath($rng_file->uri);
   $ds->setContentFromFile($rng_path, FALSE);
   $ds->label = $rng_file->filename;
-  $ds->mimetype = "application/rdf+xml";
+  $ds->mimetype = "application/xml";
 
   if (empty($object['RDF-CSS'])) {
     $ds = $object->constructDatastream('RDF-CSS', 'M');
@@ -111,6 +111,6 @@ function islandora_markup_editor_schema_upload_form_submit(array $form, array &$
     $xslt_path = drupal_realpath($xslt_file->uri);
     $ds->setContentFromFile($xslt_path, FALSE);
     $ds->label = $xslt_file->filename;
-    $ds->mimetype = 'application/xslt+xml';
+    $ds->mimetype = "application/xslt+xml";
   }
 }

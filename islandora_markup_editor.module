@@ -23,8 +23,8 @@ function islandora_markup_editor_menu() {
     'page arguments' => array(3),
     'type' => MENU_CALLBACK,
     'file' => 'includes/callbacks.inc',
-    'access callback' => 'islandora_object_access_callback',
-    'access arguments' => array(ISLANDORA_CRITICAL_EDITION_EDIT_WITH_CWRC_WRITER, 3),
+    'access callback' => 'islandora_markup_editor_save_tei_access',
+    'access arguments' => array(3),
   );
   return $items;
 }
@@ -91,13 +91,13 @@ function islandora_markup_editor_islandora_required_objects(IslandoraTuque $conn
   $sample_schema = $connection->repository->constructObject('islandora:tei_sample_schema');
   $sample_schema->owner = 'fedoraAdmin';
   $sample_schema->label = 'CWRC_EMiC_TEI_Schema';
-  $sample_schema->models = 'islandora:criticaleditionschemaCModel';
+  $sample_schema->models = 'islandora:markupeditorschemaCModel';
   $sample_schema->relationships->add(FEDORA_RELS_EXT_URI, 'isMemberOfCollection', 'islandora:tei_schema_collection');
 
   // Add the RDF (schema) datastream.
   $new_ds = $sample_schema->constructDatastream('RDF-SCHEMA', 'M');
   $new_ds->label = 'RDF-SCHEMA';
-  $new_ds->mimetype = 'application/rdf+xml';
+  $new_ds->mimetype = 'application/xml';
   $new_ds->setContentFromFile("$module_path/CWRC-Writer/src/schema/CWRC-TEIBasic.rng", FALSE);
   $sample_schema->ingestDatastream($new_ds);
 
@@ -140,7 +140,7 @@ function islandora_markup_editor_islandora_xml_form_builder_forms() {
 /**
  * Implements hook_islandora_content_model_forms_form_associations().
  */
-function islandora_markup_editor_islandora_content_model_forms_form_associations() {
+function islandora_markup_editor_islandora_islandora_xml_form_builder_form_associations() {
   return array(
     'islandora_markup_editor_mods_form' => array(
       'content_model' => 'islandora:markupEditorCModel',
@@ -150,7 +150,7 @@ function islandora_markup_editor_islandora_content_model_forms_form_associations
       'transform' => 'mods_to_dc.xsl',
       'template' => FALSE,
     ),
-    'islandora_critical_edition_schema_mods_form' => array(
+    'islandora_markup_editor_schema_form_mods' => array(
       'content_model' => 'islandora:markupeditorschemaCModel',
       'form_name' => 'Schema MODS form',
       'dsid' => 'MODS',
@@ -234,9 +234,25 @@ function islandora_markup_editor_islandora_markupeditorschemaCModel_islandora_in
     'islandora_schema_upload' => array(
       'weight' => 10,
       'type' => 'form',
-      'form_id' => 'islandora_critical_edition_schema_upload_form',
-      'module' => 'islandora_critical_edition',
+      'form_id' => 'islandora_markup_editor_schema_upload_form',
+      'module' => 'islandora_markup_editor',
       'file' => 'includes/schema_upload.form.inc',
     ),
   );
+}
+
+/**
+ * Helper function to see if the user can save data.
+ *
+ * @param AbstractObject $object
+ *   An AbstractObject representing an object within Fedora.
+ *
+ * @return bool
+ *   TRUE if the user has access, FALSE otherwise.
+ */
+function islandora_markup_editor_save_tei_access(AbstractObject $object) {
+  if (!isset($object['OBJ'])) {
+    return FALSE;
+  }
+  return islandora_datastream_access(ISLANDORA_METADATA_EDIT, $object['OBJ']);
 }

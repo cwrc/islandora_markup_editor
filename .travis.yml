@@ -12,12 +12,10 @@ env:
 before_install:
   - cd $HOME
   - git clone -b 7.x git://github.com/Islandora/islandora.git
-  - git clone -b 7.x git://github.com/discoverygarden/islandora_critical_edition.git
   - export ISLANDORA_DIR=$HOME/islandora
   - $HOME/islandora/tests/scripts/travis_setup.sh
   - cd $HOME/drupal-*
   - ln -s $TRAVIS_BUILD_DIR sites/all/modules/islandora_markup_editor
-  - ln -s $HOME/islandora_critical_edition sites/all/modules/islandora_critical_edition
 
   - drush en --yes --user=1 islandora_markup_editor
 script:
