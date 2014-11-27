@@ -1,3 +1,8 @@
+// using as the base
+// delegator.js from https://github.com/cwrc/CWRC-Writer/tree/development/src/js// 2014-11-26
+
+define(['jquery'], function($) {
+	
 var CustomDelegator = function(writer) {
 	var w = writer;
 	
@@ -207,9 +212,11 @@ var CustomDelegator = function(writer) {
 	del.validate = function(callback) {
 		var docText = w.converter.getDocumentContent(false);
 		var schemaUrl = w.schemaManager.schemas[w.schemaManager.schemaId].url;
-		console.log(docText);
+		
 		$.ajax({
-			url: Drupal.settings.islandora_markup_editor.validate_path,//w.baseUrl+'services/validator/validate.html',
+			//url: w.baseUrl+'services/validator/validate.html',
+            //TODO: pass path in as part of 'w' config?
+            url: Drupal.settings.islandora_markup_editor.validate_path,
 			type: 'POST',
 			dataType: 'xml',
 			data: {
@@ -245,17 +252,15 @@ var CustomDelegator = function(writer) {
      * TODO Move url into the conf parameters for a given resource
 	 * @param docName
 	 */
-	del.loadDocument = function(docId, callback) {
-		jQuery.ajax({
-			url: Drupal.settings.basePath + 'islandora/object/' + PID + '/datastream/' + dsid + '/view',//w.baseUrl+'editor/documents/'+w.currentDocId,
+	del.loadDocument = function(callback) {
+		$.ajax({
+			//url: w.baseUrl+'editor/documents/'+w.currentDocId,
+            //TODO: pass path in as part of 'w' config?
+            url: Drupal.settings.basePath + 'islandora/object/' + PID + '/datastream/' + dsid + '/view',
 			type: 'GET',
 			success: function(doc, status, xhr) {
 				window.location.hash = '#'+w.currentDocId;
 				callback.call(w, doc);
-				// Doing the following anywhere else may
-		        // throw a ui error in console.
-		        writer.layout.hide("east");
-		        writer.layout.toggle("west");
 			},
 			error: function(xhr, status, error) {
 				w.dialogManager.show('message', {
@@ -273,28 +278,33 @@ var CustomDelegator = function(writer) {
 	 * Performs the server call to save the document.
 	 * @param callback Called with one boolean parameter: true for successful save, false otherwise
 	 */
-	del.saveDocument = function(docId, callback) {
-		if (!Drupal.settings.islandora_markup_editor.can_edit) {
-		      writer.dialogs.show('message', {
-		        title: 'Please Authenticate',
-		        msg: 'You do not possess the sufficient permissions to edit this data.',
-		        type: 'error'
-		      });
-		      return;
-		    }
-		
-		writer.mode == writer.XMLRDF;
-		var schemaUrl = w.schemaManager.schemas[w.schemaManager.schemaId].url;
+	del.saveDocument = function(callback) {
+        if (!Drupal.settings.islandora_markup_editor.can_edit) {
+              writer.dialogs.show('message', {
+                title: 'Please Authenticate',
+                msg: 'You do not possess the sufficient permissions to edit this data.',
+                type: 'error'
+              });
+              return;
+            }
+
+        // TODO: what is the side-effect with respect to 2014-11-26 CWRC-Writer discussion in GitHub issues
+        writer.mode == writer.XMLRDF;
+
+        var schemaUrl = w.schemaManager.schemas[w.schemaManager.schemaId].url;
 		var docText = w.converter.getDocumentContent(true);
 		$.ajax({
-			url : window.parent.Drupal.settings.basePath + 'islandora/markupeditor/save_data/' + PID,
+			//url : w.baseUrl+'editor/documents/'+w.currentDocId,
+            //TODO: pass path in as part of 'w' config?
+             url : window.parent.Drupal.settings.basePath + 'islandora/markupeditor/save_data/' + PID,
 			type: 'PUT',
 			dataType: 'json',
-		    data: {
-		        "text": docText,
-		        "valid": true,
-		        "schema": schemaUrl,
-		    },
+			//data: docText,
+            data: {
+                "text": docText,
+                "valid": true,
+                "schema": schemaUrl,
+            },
 			success: function(data, status, xhr) {
 				w.editor.isNotDirty = 1; // force clean state
 				w.dialogManager.show('message', {
@@ -327,3 +337,5 @@ var CustomDelegator = function(writer) {
 	
 	return del;
 };
+
+});
