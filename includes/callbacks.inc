@@ -312,12 +312,14 @@ function islandora_markup_editor_setup_resource(AbstractObject $fedora_object)
  */
 function islandora_markup_editor_setup_entity_dialogs_helper()
 {
+  global $base_url;
+
   $tmp = null;
 
   $tmp = array(
-    "cwrcApiUrl" => "http://cwrc-dev-01.srv.ualberta.ca/islandora/cwrc_entities/v1/",
-    "geonameUrl" => "http://cwrc-dev-01.srv.ualberta.ca/cwrc-mtp/geonames/",
-    "viafUrl" => "http://cwrc-dev-01.srv.ualberta.ca/services/viaf/",
+    "cwrcApiUrl" => $base_url . "/" . modules_get_path('cwrc_entities') . "/v1/",
+    "geonameUrl" => $base_url . "/cwrc-mtp/geonames/",
+    "viafUrl" => $base_url . "/services/viaf/",
     "schemas" => array(
             "person" => "http://cwrc.ca/schemas/entities.rng",
             "organization" => "http://cwrc.ca/schemas/entities.rng",
