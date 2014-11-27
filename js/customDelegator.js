@@ -236,7 +236,7 @@ var CustomDelegator = function(writer) {
         
         w.event('validationInitiated').publish();
         
-        $.ajax({
+        jQuery.ajax({
             //TODO: add URL to the 'w' Object thus don't have to change
             // URL in custom Delegator
             //url: w.baseUrl+'services/validator/validate.html',
@@ -249,7 +249,7 @@ var CustomDelegator = function(writer) {
                 content: docText
             },
             success: function(data, status, xhr) {
-                var valid = $('status', data).text() == 'pass';
+                var valid = jQuery('status', data).text() == 'pass';
                 w.event('documentValidated').publish(valid, data, docText);
                 if (callback) {
                     callback.call(w, valid);
@@ -378,7 +378,7 @@ var CustomDelegator = function(writer) {
     del.saveDocument = function(docId, callback) {
 
         if (!Drupal.settings.islandora_markup_editor.can_edit) {
-              writer.dialogs.show('message', {
+              w.dialogManager.show('message', {
                 title: 'Please Authenticate',
                 msg: 'You do not possess the sufficient permissions to edit this data.',
                 type: 'error'
@@ -393,7 +393,7 @@ var CustomDelegator = function(writer) {
         var schemaUrl = w.schemaManager.schemas[w.schemaManager.schemaId].url;
 
         var docText = w.converter.getDocumentContent(true);
-        $.ajax({
+        jQuery.ajax({
             //TODO: add URL to the 'w' Object thus don't have to change
             // URL in custom Delegator
             //url : w.baseUrl+'editor/documents/'+docId,

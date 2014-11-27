@@ -69,7 +69,7 @@
 
 				<!--  At least one visible image needed for GData transport -->
 				<div class="shared-canvas-logo" style="font-size: 8pt">
-					<img height="25" src="impl/imgs/small-logo.png"
+					<img height="25" src="../islandora_markup_editor/img/small-logo.png"
 						style="padding: 0px; margin: 0px; border: 0px; border-top: 2px;" />
 					Powered by SharedCanvas
 				</div>
