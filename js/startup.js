@@ -18,8 +18,6 @@ function cwrcWriterInit($, Writer, Delegator) {
 
 
   function doInit(config) {
-    config.id = 'editor';
-    config.delegator = CustomDelegator;
     writer = new Writer(config);
     writer.event('writerInitialized').subscribe(function(writer) {
     // load modules then do the setup
@@ -52,6 +50,8 @@ function cwrcWriterInit($, Writer, Delegator) {
                       //TODO: add path to lib - islandora_markup_editor_add_markup_editor_drupal_settings
                       config.cwrcRootUrl = window.location.protocol + "//" + window.location.hostname + "/sites/all/libraries/CWRC-Writer/src/";
                       config.project = data; //TODO: is needed by Islandora?
+                      config.id = 'editor';
+                      config.delegator = CustomDelegator;
                       doInit(config);
                       $(window).on('resize', doResize);
                   },
