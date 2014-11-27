@@ -9,10 +9,10 @@
 ?>
 
 <div class="islandora-crited-wrapper">
-<div id="cwrc_wrapper" class="cwrc_wrapper islandora-crited-iframe-wrapper iframe_replacement" style="width: 100%; height:600px">
 <input id="full-window-button" type="button" value="Full Window" />
+<div id="cwrc_wrapper" class="cwrc_wrapper islandora-crited-iframe-wrapper iframe_replacement" style="width: 100%; height:600px">
 
-      <div id="header" class="ui-layout-north">
+      <div id="cwrc-header" class="ui-layout-north">
         <!-- TODO: These are being hidden in the 'startup.js' script.-->
         <div id="page_selector">Loading....</div>
         <div id="header-inner">
@@ -41,7 +41,7 @@
         </div>
       </div>
 
-<div id="main" class="ui-layout-center">
+<div id="cwrc-main" class="ui-layout-center">
 	<div class="ui-layout-center">
 		<form method="post" action="">
 			<textarea id="editor" name="editor" class="tinymce"></textarea>

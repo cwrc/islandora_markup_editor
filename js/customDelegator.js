@@ -345,6 +345,11 @@ var CustomDelegator = function(writer) {
             type: 'GET',
             success: function(doc, status, xhr) {
                 window.location.hash = '#'+docId;
+
+                // Doing the following anywhere else may
+                // throw a ui error in console.
+                writer.layout.hide("east");
+                writer.layout.toggle("west");
                 callback.call(w, doc);
             },
             error: function(xhr, status, error) {
