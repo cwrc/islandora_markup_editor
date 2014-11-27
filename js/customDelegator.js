@@ -1,4 +1,4 @@
-define(['jquery', 'octokit'], function($, Octokit) {
+//define(['jquery', 'octokit'], function($, Octokit) {
 
 /**
  * @class CustomDelegator
@@ -392,7 +392,7 @@ var CustomDelegator = function(writer) {
             //TODO: add URL to the 'w' Object thus don't have to change
             // URL in custom Delegator
             //url : w.baseUrl+'editor/documents/'+docId,
-            url : window.parent.Drupal.settings.basePath + 'islandora/markupeditor/save_data/' + PID
+            url : window.parent.Drupal.settings.basePath + 'islandora/markupeditor/save_data/' + PID,
             type: 'PUT',
             dataType: 'json',
             data: {
