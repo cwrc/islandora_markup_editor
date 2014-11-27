@@ -317,7 +317,7 @@ function islandora_markup_editor_setup_entity_dialogs_helper()
   $tmp = null;
 
   $tmp = array(
-    "cwrcApiUrl" => $base_url . "/" . drupal_get_path('module','cwrc_entities') . "/v1/",
+    "cwrcApiUrl" => $base_url . "/" . CWRC_ENTITES_API . '/',
     "geonameUrl" => $base_url . "/cwrc-mtp/geonames/",
     "viafUrl" => $base_url . "/services/viaf/",
     "schemas" => array(
