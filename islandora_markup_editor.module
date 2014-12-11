@@ -194,10 +194,8 @@ function islandora_markup_editor_library() {
     'title' => t('CWRC-Writer Library'),
     'version' => '1.0',
     'js' => array(
-      //"$library_path/CWRC-Writer/src/js/lib/require/require.js" => array('#attributes' => array( 'data-main' => "$library_path/CWRC-Writer/src/js/config.js") ),
-      "$library_CWRC_Writer_path/src/js/lib/require/require.js" => array(),
-      "$module_path/js/requirejs_config.js" => array(),
       "$library_CWRC_Writer_path/src/js/config.js" => array(),
+      "$library_CWRC_Writer_path/src/js/lib/require/require.js" => array(),
       "$library_CWRC_Writer_path/src/js/layout.js" => array(),
     ),
     'css' => array(
